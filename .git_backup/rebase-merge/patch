@@ -1,0 +1,643 @@
+diff --git a/LOGICTICS b/LOGICTICS
+new file mode 160000
+index 0000000..a2bb789
+--- /dev/null
++++ b/LOGICTICS
+@@ -0,0 +1 @@
++Subproject commit a2bb789e694a1203020af18472c94a49ac415a05
+diff --git a/index.php b/index.php
+index 4e872d7..10d1e37 100644
+--- a/index.php
++++ b/index.php
+@@ -4,81 +4,242 @@
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>TRANG CHỦ</title>
+-    <link rel="stylesheet" href="style.css?v= <?php echo time(); ?>">
+-    <script src="script.js"></script>
+-    <link href="../css/bootstrap.min.css" rel="stylesheet">
+-    <link href="../css/jquery-ui.min.css" rel="stylesheet">
++    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
++    <link rel="stylesheet" href="style.css?v=<?php echo time(); ?>">
++    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+ 
+ </head>
+ <body class="menubar">
+ 
+-<header class="menuex">
+-    <div class="container">
+-        <div class="row">
+-            <div class="col-md-6 "> 
+-                <div class="logo-sn ms-d-block-lg">
+-                    <a class="ml-0 text-left" href="index.php">
+-                        <img src="./img/SHIP.png" alt="logo" style="max-width: 75px;">
+-                    </a>
+-                </div>
+-            </div>
+-            <div class="col-md-8"> 
+-                <nav class="">
+-                    <ul>
+-                        <li><a href="#">Trang chủ</a></li>
+-                        <li><a href="#">Giới thiệu</a>
+-                            <ul>
+-                                <li><a href="#">Lịch sử</a></li>
+-                                <li><a href="#">Sứ mệnh</a></li>
+-                                <li><a href="#">Tầm nhìn</a></li>
+-                            </ul>
+-                        </li>
+-                        <li><a href="#">Sản phẩm</a>
+-                            <ul>
+-                                <li><a href="#">Điện thoại thông minh</a></li>
+-                                <li><a href="#">Máy tính xách tay</a></li>
+-                                <li><a href="#">Tivi</a></li>
+-                                <li><a href="#">Thiết bị gia dụng</a></li>
+-                            </ul>
+-                        </li>
+-                        <li><a href="#">Liên hệ</a></li>
+-                    </ul>
+-                </nav>
++<div class="overlay"></div>
++<!-- MENU -->
++<header class="menuex fixed-top">
++
++    <div class="container-fluid ">
++
++            <div class="d-flex align-items-end bg-body-tertiary" style="height: 50;">
++
++                    <div class="col d-flex justify-content-center">                
++                        <div class="col-md-2">
++                            <div class="logo-sn ms-d-block-lg">
++                                <a class="ml-0 text-left" href="index.php">
++                                    <img src="./img/logo2.png" alt="logo" style="max-width: 75px;">
++                                </a>
++                            </div>
++                        </div>
++                    </div>
++
++                    <div class="col menu-translate">
++                        
++                        <nav class="main-nav-menu">
++                                <div class=" menu-collapse" id="navbarNav">
++                                    <ul class="menu-nav">
++                                        <li class="menu-item"><a class="menu-link" href="#">Trang chủ</a></li>
++                                        <li class="menu-item">
++                                            <a class="menu-link" href="#">Dịch vụ</a>
++                                            <ul>
++                                                <li><a href="#">Giao hàng nhanh</a></li>
++                                                <li><a href="#">Báo giá</a></li>
++                                                <li><a href="#">Tầm nhìn</a></li>
++                                            </ul>
++                                        </li>
++                                        <li class="menu-item">
++                                            <a class="menu-link" href="#">Giới thiệu</a>
++                                            <ul>
++                                                <li><a href="#">Điện thoại thông minh</a></li>
++                                                <li><a href="#">Máy tính xách tay</a></li>
++                                                <li><a href="#">Tivi</a></li>
++                                                <li><a href="#">Thiết bị gia dụng</a></li>
++                                            </ul>
++                                        </li>
++                                        <li class="menu-item"><a class="menu-link" href="#">Liên hệ</a></li>
++                                    </ul>
++                                </div>
++                                            
++                        </nav>
++
++                        
++                    </div>
++
++                        <div class="col">
++                                <form>
++                                    <div class="input-group">
++                                    <input type="search" class="form-control rounded" oninput="showResult(this.value)" onblur="hideLiveSearch()" placeholder="Nhập mã vận đơn..." aria-label="Search" aria-describedby="search-addon" />
++                                        <div id="livesearch" style="border-radius: 0 0 15px 15px;"></div>
++                                    </div>
++                                </form>
++
++                        </div>
++
+             </div>
+-        </div>
++            
+     </div>
++
+ </header>
++ 
++<div class="container-fluid">
++    <div class="row">
++        <div class="normalform mx-auto ">
++                <main class="themain" style="">
++
++                        <section>
++                            <article id="article">
++                                <img class="img-fluid" src="./img/vechungtoi6.webp" alt="Ảnh mô tả" >
++                                <br>
++                                <br>
++                                <div class="s-title text-center">
++                                    <h2>GIAO NHANH HƠN 6 TIẾNG</h2>
++                                    <p id="p1">Nội dung bài viết</p>
++                                </div>
++                            </article>
++                        </section>
++
++                        <section class="section section-slide-app">
++                            <div class="container">
++                                <div class="row">
++                                <div class="col-md-5 col-sm-12 col-xs-12 d-flex align-items-justify">
++                                        <p id="p1">Những năm gần đây, công nghệ được xem là yếu tố tạo sự bứt phá giúp các doanh nghiệp phát triển, cùng với sự hài lòng của người tiêu dùng sẽ là "đích đến" cho cuộc đua về dịch vụ giao nhận thời 4.0 này. Cùng với sự phát triển trong thời đại chuyển đổi số, thị trường thương mại điện tử trong nước phát triển thần tốc do các yếu tố như dân số trẻ, tỷ lệ sử dụng internet cao và tỷ lệ sử dụng điện thoại thông minh tăng, cuộc đua của các công ty giao hàng cũng ngày càng sôi nổi, chiến lược dịch vụ chăm khóc khách hàng và phát triển hệ sinh thái. 
++                                            Các công ty giao hàng mang lại sự tiện lợi, linh hoạt và tiết kiệm thời gian khi người dùng có thể dễ dàng mua sắm trực tuyến và được giao nhận hàng tận nơi, không mất công di chuyển . Chúng hỗ trợ mạnh mẽ cho thương mại điện tử bằng cách tạo ra một hệ thống vận chuyển linh hoạt, giúp hàng hóa được vận chuyển an toàn đến tay khách hàng.
++                                            Khả năng vận chuyển của các công ty giao hàng đáp ứng các nhu cầu đa dạng và phong phú của khách hàng gồm hàng tiêu dùng hàng ngày, hàng điện tử, thực phẩm,… 
++                                        </p>
++                                    </div>
++
++                                    <div class="col-md-7 col-sm-12 col-xs-12">
++                                        <div class="text-center">
++                                            <img src="./img/vechungtoi4.webp" alt="" class="img-fluid">
++                                        </div>
++                                    </div>
++                                </div>
++                            </div>
++                        </section>
++
+ 
++                    <aside>
++                        <article id="article">
++                            <h3>Tiêu đề nội dung bên cạnh 2</h3>
++                            <p id="p3">Nội dung bên cạnh 2</p>
++                        </article>
++                    </aside>
++                </main>
+ 
+-    <br>
+-
+-    <div class="normalform" style="padding: 1; margin-left: 15px; margin-right: 15px;">
+-        <main class="themain">
+-            <section>
+-                <article id="article">
+-                    <h2>Tiêu đề bài viết</h2>
+-                    <p id="p1">Nội dung bài viết</p>
+-                </article>
+-            </section>
+-            <aside>
+-            <article id="article">
+-                <h3>Tiêu đề nội dung bên cạnh</h3>
+-                <p id="p2">Nội dung bên cạnh</p>
+-            </article>
+-            </aside>
+-            <aside>
+-            <article id="article">
+-                <h3>Tiêu đề nội dung bên cạnh 2</h3>
+-                <p id="p3">Nội dung bên cạnh 2 </p>
+-            </article>
+-            </aside>
+-        </main>
+-
+-        <footer class="footer">
+-            <p id="p4">Bản quyền</p>
+-        </footer>
++                <footer class="footer">
++                    <div class="footer-color">
++                    <p id="p4">Bản quyền</p>
++                    <p id="p4">Copyright @QSHIP2024</p>
++                </footer>
++        </div>
+     </div>
++</div>
++
++<!-- Bootstrap JS, Popper.js, and jQuery -->
++<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
++
++<!-- SCRIPT CHO FORM -->
++<script>
++    document.addEventListener("DOMContentLoaded", function () {
++        // Get the button, form, close button, and overlay elements
++        var openFormBtn = document.getElementById("openFormBtn");
++        var closeFormBtn = document.getElementById("closeFormBtn");
++        var formContainer = document.getElementById("formContainer");
++        var overlay = document.querySelector(".overlay");
++
++        // Add click event listener to the open button
++        openFormBtn.addEventListener("click", function () {
++            // Show the form container and overlay
++            formContainer.style.display = "block";
++            overlay.style.display = "block";
++        });
++
++        // Add click event listener to the close button
++        closeFormBtn.addEventListener("click", function () {
++            // Hide the form container and overlay
++            formContainer.style.display = "none";
++            overlay.style.display = "none";
++        });
++    });
++</script>
++
++<!-- SCRIPT TÌM KIẾM -->
++    <script>
++        function showResult(str) {
++        if (str.length==0) {
++            document.getElementById("livesearch").innerHTML="";
++            document.getElementById("livesearch").style.border="0px";
++            return;
++        }
++        var xmlhttp=new XMLHttpRequest();
++        xmlhttp.onreadystatechange=function() {
++            if (this.readyState==4 && this.status==200) {
++            document.getElementById("livesearch").innerHTML=this.responseText;
++            document.getElementById("livesearch").style.border="1px solid #A5ACB2";
++            }
++        }
++        xmlhttp.open("GET","livesearch.php?q="+str,true);
++        xmlhttp.send();
++        }
++        function hideLiveSearch() {
++            var livesearch = document.getElementById("livesearch");
++            
++            // Ẩn thanh livesearch khi người dùng rời khỏi ô nhập liệu
++            livesearch.style.display = "none";
++        }
++
++        document.addEventListener("DOMContentLoaded", function () {
++            var searchInput = document.querySelector('input[type="search"]');
++            var livesearch = document.getElementById("livesearch");
++
++            // Sự kiện xóa nội dung tìm kiếm và hiển thị livesearch khi nhập liệu
++            searchInput.addEventListener("input", function () {
++                var inputValue = searchInput.value.trim();
++
++                if (inputValue.length > 0) {
++                    // Nếu có nội dung, hiển thị livesearch và cập nhật nội dung
++                    livesearch.style.display = "block";
++                    showResult(inputValue);
++                } else {
++                    // Nếu không có nội dung, ẩn thanh livesearch
++                    livesearch.style.display = "none";
++                }
++            });
++        });
++    </script>
+ 
+ </body>
++</html>           
++
++
++
++<!-- FORM DK/DN -->
++                        <!-- <div class="normalform mx-auto">
++                                <div id="formContainer" style="display: none;">
++                                <form id="myForm" class="needs-validation" novalidate>
++                                    <button id="closeFormBtn" class="btn btn-outline-secondary close-btn">&times;</button>
++                                    <div class="mb-3">
++                                        <label for="fullName" class="form-label">Họ và Tên:</label>
++                                        <input type="text" class="form-control" id="fullName" name="fullName" required>
++                                    </div>
++                                    
++                                    <div class="mb-3">
++                                        <label for="phoneNumber" class="form-label">Số Điện Thoại:</label>
++                                        <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" required>
++                                    </div>
++
++                                    <div class="mb-3">
++                                        <label for="password" class="form-label">Mật khẩu:</label>
++                                        <input type="password" class="form-control" id="password" name="password" required>
++                                    </div>
++
++                                    <div class="mb-3">
++                                        <label for="rePassword" class="form-label">Nhập lại mật khẩu:</label>
++                                        <input type="password" class="form-control" id="rePassword" name="rePassword" required>
++                                    </div>
++
++                                    <div class="mb-3">
++                                        <label for="rePassword" class="form-label">Bạn đã có tài khoản? <a href="" style="text-decoration:none; ">Đăng Nhập</a></label>
++                                    </div>
+ 
+-</html>
++                                    <button type="submit" class="btn btn-success ">Đăng Ký</button>
++                                </form>
++                            </div>
++                        </div>
++                    </div> -->
+\ No newline at end of file
+diff --git a/livesearch.php b/livesearch.php
+new file mode 100644
+index 0000000..8380244
+--- /dev/null
++++ b/livesearch.php
+@@ -0,0 +1,41 @@
++<?php
++// livesearch.php
++
++// Giả sử bạn có một mảng dữ liệu đơn giản để tìm kiếm
++$data = array(
++    "Apple",
++    "Banana",
++    "Orange",
++    "Mango",
++    "Pineapple",
++    "Grapes",
++    "Strawberry",
++    "Blueberry",
++    "Raspberry"
++);
++
++// Lấy giá trị tham số truy vấn từ yêu cầu AJAX
++$searchTerm = $_GET['q'];
++
++// Tìm kiếm trong mảng dữ liệu
++$results = array();
++foreach ($data as $item) {
++    // Nếu chuỗi tìm kiếm tồn tại trong mục
++    if (stripos($item, $searchTerm) !== false) {
++        // Thêm mục này vào kết quả
++        $results[] = $item;
++    }
++}
++
++// Nếu không có kết quả
++if (empty($results)) {
++    echo "<div style='padding:10px;'>Không có đơn hàng</div>";
++} else {
++    // Trả về kết quả dưới dạng danh sách HTML
++    echo "<ul style='padding:10px;'>";
++    foreach ($results as $result) {
++        echo "<li>" . $result . "</li>";
++    }
++    echo "</ul>";
++}
++?>
+diff --git a/package-lock.json b/package-lock.json
+index 5b38572..49ea156 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -5,7 +5,8 @@
+   "packages": {
+     "": {
+       "dependencies": {
+-        "bootstrap": "^5.3.2"
++        "bootstrap": "^5.3.2",
++        "bootstrap-icons": "^1.11.3"
+       }
+     },
+     "node_modules/@popperjs/core": {
+@@ -35,6 +36,21 @@
+       "peerDependencies": {
+         "@popperjs/core": "^2.11.8"
+       }
++    },
++    "node_modules/bootstrap-icons": {
++      "version": "1.11.3",
++      "resolved": "https://registry.npmjs.org/bootstrap-icons/-/bootstrap-icons-1.11.3.tgz",
++      "integrity": "sha512-+3lpHrCw/it2/7lBL15VR0HEumaBss0+f/Lb6ZvHISn1mlK83jjFpooTLsMWbIjJMDjDjOExMsTxnXSIT4k4ww==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/twbs"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/bootstrap"
++        }
++      ]
+     }
+   },
+   "dependencies": {
+@@ -49,6 +65,11 @@
+       "resolved": "https://registry.npmjs.org/bootstrap/-/bootstrap-5.3.2.tgz",
+       "integrity": "sha512-D32nmNWiQHo94BKHLmOrdjlL05q1c8oxbtBphQFb9Z5to6eGRDCm0QgeaZ4zFBHzfg2++rqa2JkqCcxDy0sH0g==",
+       "requires": {}
++    },
++    "bootstrap-icons": {
++      "version": "1.11.3",
++      "resolved": "https://registry.npmjs.org/bootstrap-icons/-/bootstrap-icons-1.11.3.tgz",
++      "integrity": "sha512-+3lpHrCw/it2/7lBL15VR0HEumaBss0+f/Lb6ZvHISn1mlK83jjFpooTLsMWbIjJMDjDjOExMsTxnXSIT4k4ww=="
+     }
+   }
+ }
+diff --git a/package.json b/package.json
+index 3fb9dab..9fb18cd 100644
+--- a/package.json
++++ b/package.json
+@@ -1,5 +1,6 @@
+ {
+   "dependencies": {
+-    "bootstrap": "^5.3.2"
++    "bootstrap": "^5.3.2",
++    "bootstrap-icons": "^1.11.3"
+   }
+ }
+diff --git a/script.js b/script.js
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/style.css b/style.css
+index 24902d0..29e1236 100644
+--- a/style.css
++++ b/style.css
+@@ -9,51 +9,54 @@
+ 
+     @font-face {
+         font-family: 'Samsung One 700';
+-        src: 
+-            url('../WEBSITE_EXHIBITION/font/SamsungOne-700.ttf') format('truetype');
++        src: url('../WEBSITE_EXHIBITION/font/SamsungOne-700.ttf') format('truetype');
+         font-weight: 700;
+         font-style: normal;
+     }
+ 
+     @font-face {
+         font-family: 'Samsung Sharp Sans Bold';
+-        src: 
+-            url('../WEBSITE_EXHIBITION/font/SamsungSharpSans-Bold.ttf') format('truetype');
++        src: url('../WEBSITE_EXHIBITION/font/SamsungSharpSans-Bold.ttf') format('truetype');
+         font-weight: bold;
+         font-style: normal;
+     }
+ 
+     @font-face {
+         font-family: 'SamsungSharpSans-Bold_SMCPS';
+-        src: 
+-            url('../WEBSITE_EXHIBITION/font/iCiel-SamsungSharpSans-Bold_SMCPS.ttf') format('truetype');
++        src: url('../WEBSITE_EXHIBITION/font/iCiel-SamsungSharpSans-Bold_SMCPS.ttf') format('truetype');
+         font-weight: bold;
+         font-style: normal;
+     }
+ 
+ /* BODY */
+-body.menubar {
+-    width: 100%;
+-    margin: 0 ;
+-
++body {
++    overflow-x: hidden;
+ }
+ 
+ /* HEADER */
+ header.menuex {
+     background-color: #ebc3c3;
+-    height: auto;
+-    line-height: 50px;
+-    padding: 0 10px;
++    line-height: 40px;
++    padding: 5px 5px;
+     background-color: #fff;
+     box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+     border-bottom-left-radius: 11px;
+     border-bottom-right-radius: 11px;
+-    font-family: 'SamsungSharpSans-Bold_SMCPS',Arial;
++    font-family: 'SamsungSharpSans-Bold_SMCPS', Arial;
++    display: flex;
++    justify-content: space-between;
++    align-items: center;
++}
+ 
++/* LOGO */
++.logo-sn {
++    display: flex;
++    align-items: center;
+ }
+ 
+-#article{
+-    font-family: 'Samsung One 700',Arial, sans-serif;
++
++#article {
++    font-family: 'Samsung One 700', Arial, sans-serif;
+ }
+ 
+ #p1, #p2, #p3, #p4 {
+@@ -62,13 +65,14 @@ header.menuex {
+ 
+ nav ul {
+     list-style-type: none;
++    padding: 0;
++    margin: 0;
+ }
+ 
+ nav li {
+-    float: left;
++    display: inline-block;
+     margin-right: 20px;
+     position: relative;
+-    
+ }
+ 
+ nav li a {
+@@ -76,19 +80,19 @@ nav li a {
+     color: #000;
+     font-size: 16px;
+     display: block;
+-
++    margin: 0;
+ }
+ 
+ nav li ul {
+     display: none;
+     position: absolute;
+-    top: 100%;
+-    left: 0;
+     background-color: #fff;
+     border: 1px solid #ccc;
+-    width: 200px; 
++    width: 200px;
+     border-bottom-left-radius: 10px;
+     border-bottom-right-radius: 10px;
++    padding-top: 1px;
++    margin-top: 0.5px;
+ }
+ 
+ nav li:hover ul {
+@@ -97,18 +101,92 @@ nav li:hover ul {
+ 
+ nav li ul li {
+     float: none;
+-    padding-left: 10px; 
++    padding-left: 10px;
+     position: relative;
+-    width: 100%; 
++    width: 100%;
+ }
+ 
+ nav li ul li a {
+     color: #000;
+     font-size: 14px;
+     display: block;
+-    
+ }
+ 
+ nav li ul li a:hover {
+     color: #ff0000;
+ }
++
++.navbar-nav {
++    display: flex;
++    list-style-type: none;
++    margin: 0;
++}
++
++.nav-item {
++    margin-right: 20px;
++}
++
++.row {
++    display: flex;
++    align-items: center;
++}
++#article img {
++    position: relative; 
++    width: 100%;
++    height: 65vh; 
++    object-fit: cover; 
++    border-radius: 15px 15px 15px 15px;
++
++}
++
++.container-fluid{
++    padding: 0;
++}
++
++/* Overlay */
++.overlay {
++    display: none;
++    position: fixed;
++    top: 0;
++    left: 0;
++    width: 100%;
++    height: 100%;
++    background: rgba(0, 0, 0, 0.5); /* Adjust the transparency (0.5 is 50%) */
++    z-index: 999; /* Place the overlay beneath the form */
++}
++
++/* Form Container */
++#formContainer {
++    font-family: 'Samsung One 700', Arial, sans-serif;
++    display: none;
++    position: fixed;
++    top: 50%;
++    left: 50%;
++    transform: translate(-50%, -50%);
++    background-color: white;
++    padding: 20px;
++    border-radius: 10px;
++    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
++    z-index: 1000; 
++    max-width: 400px; 
++    width: 100%;
++}
++.footer-color{
++    background-color: antiquewhite;
++}
++
++/* THANH TÌM KIẾM */
++#livesearch {
++    background-color: aliceblue;
++    position: absolute;
++    top: 100%; /* Điều này đặt nó ở dưới thanh tìm kiếm */
++    width: 100%; /* Đảm bảo chiều rộng của nó bằng với thanh tìm kiếm */
++    max-height: 200px; /* Thiết lập chiều cao tối đa để tránh quá mức chiếm không gian */
++    overflow-y: auto; /* Cho phép cuộn nếu nội dung quá kích thước */
++    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Thêm hiệu ứng bóng đổ */
++}
++
++/* DỊCH MENU  */
++.menu-translate {
++    transform: translateY(5px); /* Giá trị chuyển động khi hover */
++}
+\ No newline at end of file

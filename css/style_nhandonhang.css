@@ -1,0 +1,120 @@
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: auto; 
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.th-style0 {
+    background-color: #ff6200;
+    color: white;
+
+}
+.th-style {
+    text-align: center;
+    background-color: rgb(52, 187, 255);
+    color: white;
+}
+.th-style2 {
+    text-align: center;
+    background-color: #00337f;
+    color: white;
+}
+tr:hover {
+    background-color: #f5f5f5;
+}
+.nvgh-select {
+    width: 100%;
+    padding: 10px 15px;
+    margin: 5px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 20px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-accept {
+    background-color: #29db52;
+    color: white;
+}
+
+.btn-cancel {
+    background-color: #e90000;
+    color: white;
+}
+.btn-shipping {
+    background-color: #0b83fb;
+    color: rgb(227, 255, 224);
+}
+.btn-accept:hover, .btn-cancel:hover, .btn-shipping:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-accept:active {
+    background-color: #218838;
+}
+
+.btn-cancel:active {
+    background-color: #c82333;
+}
+
+.submit-pldh{
+    background-color: #57ba00ed;
+    color: white;
+    padding: 14px 24px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 20px;
+}
+.submit-pldh:hover{
+    background-color: #dfba00;
+}
+
+/* Tạo kiểu cho thẻ select */
+.action-select select {
+    border: 1px solid #ccc; /* Bo viền nhạt */
+    border-radius: 4px; /* Bo góc */
+    padding: 8px; /* Thêm khoảng cách bên trong */
+    background-color: #f9f9f9; /* Màu nền nhẹ */
+    color: #333; /* Màu chữ */
+    font-size: 14px; /* Cỡ chữ */
+    transition: all 0.3s; /* Hiệu ứng chuyển tiếp */
+}
+
+/* Hiệu ứng khi hover */
+.action-select select:hover {
+    border-color: #888; /* Thay đổi màu viền khi hover */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+}
+
+/* Hiệu ứng khi thẻ đang được chọn */
+.action-select select:focus {
+    border-color: #66afe9; /* Màu viền khi tập trung */
+    box-shadow: 0 0 10px rgba(102, 175, 233, 0.6); /* Đổ bóng khi tập trung */
+}

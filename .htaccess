@@ -1,0 +1,5 @@
+# Enable URL rewriting
+RewriteEngine On
+
+# Rewrite order URL from "chi_tiet_don_hang.php?maVanDon=12345" to "order/12345"
+RewriteRule ^order/([0-9a-zA-Z_-]+)$ chi_tiet_don_hang.php?maVanDon=$1 [L]
