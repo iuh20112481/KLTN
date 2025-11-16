@@ -1,3 +1,4 @@
+
 <?php
     session_start();
 
@@ -148,6 +149,7 @@
                                     <a class="nav-link" href="?page=axemdhdg" style="text-decoration:none;">Xem lại đơn hàng đã giao</a>
                                     <a class="nav-link" href="?page=aqltk" style="text-decoration:none;">Quản lý thông tin cá nhân</a>
                                     <a class="nav-link" href="" style="text-decoration:none;">Quản lý Báo cáo</a>
+                                    <a class="nav-link" href="d_hoahongshipper.php" style="text-decoration:none;">Hoa hồng</a>
                                     <a class="nav-link" href="dangXuat.php" style="text-decoration:none;">Đăng xuất</a>
                                 </li>
                             </ul>
