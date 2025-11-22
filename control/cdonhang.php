@@ -184,7 +184,7 @@ include_once ("../model/mdonhang.php");
     }
     
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        if ($_POST['action'] === 'updateDonHangofNVGH') {
+        if (isset($_POST['action']) && $_POST['action'] === 'updateDonHangofNVGH') {
             $idDonHang = $_POST['idDonHang'];
             $trangThaiDonHang = $_POST['trangThaiDonHang'];
             $maNhanVien = $_POST['maNhanVien'];

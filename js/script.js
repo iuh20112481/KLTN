@@ -1,19 +1,36 @@
-$(document).ready(function() {
-    let isProcessing = false; // Biến cờ để kiểm soát xử lý đồng thời
+// ✅ ĐỢI Bootstrap Select load xong mới chạy
+function initializeSelectPicker() {
+    // Kiểm tra jQuery có tồn tại không
+    if (typeof jQuery === 'undefined') {
+        console.error('jQuery chưa load!');
+        setTimeout(initializeSelectPicker, 100);
+        return;
+    }
 
-    // Đăng ký sự kiện cho các Selectpicker
-    $('#lvl1, #lvl2, #lvl3, #lvl1_1, #lvl2_1, #lvl3_1').selectpicker();
+    // Kiểm tra Bootstrap Select có tồn tại không
+    if (typeof $.fn.selectpicker === 'undefined') {
+        console.log('Đang đợi Bootstrap Select load...');
+        setTimeout(initializeSelectPicker, 100);
+        return;
+    }
+
+    // ✅ Tất cả thư viện đã sẵn sàng! Chạy code ngay lập tức
+    console.log('✅ Tất cả thư viện đã sẵn sàng! Khởi tạo event handlers...');
+
+    // === BẮT ĐẦU CODE THỰC THI ===
+    // NOTE: Không init selectpicker ở đây - mỗi page tự init trong inline script
+    let isProcessing = false;
 
     let oldLvl2Id = null;
     let oldLvl2_1Id = null;
     
-    // Hàm để xử lý sự kiện thay đổi cấp 2
+    // Hàm xử lý sự kiện thay đổi cấp 2
     function handleLevel2Change() {
         if (isProcessing) {
-            return; // Nếu đang xử lý, không thực hiện thêm hành động
+            return;
         }
 
-        isProcessing = true; // Đánh dấu đang xử lý
+        isProcessing = true;
 
         const lvl2_id = $("#lvl2").val();
         const lvl2_1_id = $("#lvl2_1").val();
@@ -21,26 +38,25 @@ $(document).ready(function() {
         $("#district_code_display").val(lvl2_id);
         $("#district_code_display1").val(lvl2_1_id);
 
-        const promises = [checkRegionComparison()]; // Kiểm tra so sánh vùng hành chính
+        const promises = [checkRegionComparison()];
 
-    // Nếu giá trị mới khác với giá trị cũ, tải lại dữ liệu
-    if (lvl2_id !== oldLvl2Id) {
-        promises.push(loadLevel3Data(lvl2_id));
-        oldLvl2Id = lvl2_id;
-    }
+        if (lvl2_id !== oldLvl2Id) {
+            promises.push(loadLevel3Data(lvl2_id));
+            oldLvl2Id = lvl2_id;
+        }
 
-    if (lvl2_1_id !== oldLvl2_1Id) {
-        promises.push(loadLevel3Data1(lvl2_1_id));
-        oldLvl2_1Id = lvl2_1_id;
-    }
+        if (lvl2_1_id !== oldLvl2_1Id) {
+            promises.push(loadLevel3Data1(lvl2_1_id));
+            oldLvl2_1Id = lvl2_1_id;
+        }
 
-    Promise.all(promises)
-    .then(() => {
-        checkProvinceSimilarity(); // Gọi hàm checkProvinceSimilarity sau khi dữ liệu mới được tải
-    })
-    .finally(() => {
-        isProcessing = false; // Hoàn thành xử lý
-    });
+        Promise.all(promises)
+        .then(() => {
+            checkProvinceSimilarity();
+        })
+        .finally(() => {
+            isProcessing = false;
+        });
     }   
 
     // Đăng ký sự kiện thay đổi cấp 2
@@ -59,7 +75,6 @@ $(document).ready(function() {
         var lvl1_id = $(this).val();
         $("#province_code_display").val(lvl1_id);
 
-        // Cập nhật các giá trị và kiểm tra tương đồng
         checkProvinceSimilarity(); 
         checkRegionComparison();
 
@@ -74,7 +89,11 @@ $(document).ready(function() {
                     lvl2_body += "<option value=" + data[key]['code'] + ">" + data[key]['full_name'] + "</option>";
                 }
                 $("#lvl2").html(lvl2_body);
-                $('#lvl2').selectpicker('refresh'); // Cập nhật Bootstrap Select
+                $('#lvl2').selectpicker('refresh'); // <- Đã có, rất tốt!
+                
+                // Reset lvl3
+                $("#lvl3").html("<option value='select'>Chọn xã/phường</option>");
+                $('#lvl3').selectpicker('refresh');
             }
         });
     });
@@ -85,7 +104,6 @@ $(document).ready(function() {
         var lvl1_1_id = $(this).val();
         $("#province_code_display1").val(lvl1_1_id);
 
-        // Cập nhật các giá trị và kiểm tra tương đồng
         checkProvinceSimilarity(); 
         checkRegionComparison();
 
@@ -100,45 +118,41 @@ $(document).ready(function() {
                     lvl2_1_body += "<option value=" + data[key]['code'] + ">" + data[key]['full_name'] + "</option>";
                 }
                 $("#lvl2_1").html(lvl2_1_body); 
-                $('#lvl2_1').selectpicker('refresh'); 
+                $('#lvl2_1').selectpicker('refresh'); // <- Đã có, rất tốt!
+
+                // Reset lvl3_1
+                $("#lvl3_1").html("<option value='select'>Chọn xã/phường</option>");
+                $('#lvl3_1').selectpicker('refresh');
             }
         });
     });
-    // Định nghĩa hàm `formatNumber`
-        function formatNumber() {
-            var input = document.getElementById("phithuho").value;
 
-            if (input == null) {
-                return ''; // Trả về chuỗi rỗng nếu không có giá trị
-            }
+    // Định nghĩa hàm formatNumber (Lưu ý: phithuho là checkbox, code này có thể không dùng)
+    function formatNumber() {
+        var input = document.getElementById("phithuho").value;
 
-            // Loại bỏ ký tự không phải số
-            var formattedInput = input.replace(/[^\d]/g, '');
-
-            // Định dạng với dấu chấm phân cách hàng nghìn
-            formattedInput = formattedInput.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
-            // Cập nhật lại vào `textarea`
-            document.getElementById("phithuho").value = formattedInput;
+        if (input == null) {
+            return '';
         }
 
-        // Đăng ký sự kiện `change` cho `#phithuho`
-        $('#phithuho').change(formatNumber);
+        var formattedInput = input.replace(/[^\d]/g, '');
+        formattedInput = formattedInput.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
-        // Sự kiện `change` cho `select` để cập nhật vào `input`
-        $("#giaohang").on("change", function() {
-            var selectedValue = $(this).val(); // Lấy giá trị đã chọn từ `select`
-            $("#selected-shipping-method").val(selectedValue); // Cập nhật vào thẻ `input`
-        });
+        document.getElementById("phithuho").value = formattedInput;
+    }
+
+    $('#phithuho').change(formatNumber);
+
+    // Lưu ý: ID "giaohang" có thể không tồn tại, file PHP dùng "selected-shipping-method"
+    $("#giaohang").on("change", function() {
+        var selectedValue = $(this).val();
+        $("#selected-shipping-method").val(selectedValue);
+    });
     
-        // Cập nhật giá trị khi người dùng nhập khối lượng
-        $("#khoiluong").on("input", function() {
-            var khoiluong = $(this).val();
-            $("#khoiluong_copy").val(khoiluong); 
-        });
-});
+    // === KẾT THÚC CODE THỰC THI ===
+}
 
-// Hàm tải dữ liệu cấp 2 (quận/huyện)
+// Hàm tải dữ liệu cấp 3 (phường/xã)
 function loadLevel3Data(lvl2_id) {
     return new Promise((resolve, reject) => {
         $.ajax({
@@ -151,9 +165,9 @@ function loadLevel3Data(lvl2_id) {
                 for (var key in data) {
                     lvl3_body += "<option value=" + data[key]['code'] + ">" + data[key]['full_name'] + "</option>";
                 }
-                $("#lvl3").html(lvl3_body); // Cập nhật danh sách xã/phường
-                $('#lvl3').selectpicker('refresh'); 
-                resolve(); // Hoàn thành xử lý
+                $("#lvl3").html(lvl3_body);
+                $('#lvl3').selectpicker('refresh'); // <- Đã có
+                resolve();
             },
             error: function(xhr, status, error) {
                 reject(error);
@@ -162,7 +176,7 @@ function loadLevel3Data(lvl2_id) {
     });
 }
 
-// Hàm tải dữ liệu cấp 2 (quận/huyện) cho cấp 2_1
+// Hàm tải dữ liệu cấp 3 (phường/xã) cho cấp 2_1
 function loadLevel3Data1(lvl2_1_id) {
     return new Promise((resolve, reject) => {
         $.ajax({
@@ -176,7 +190,7 @@ function loadLevel3Data1(lvl2_1_id) {
                     lvl3_body += "<option value=" + data[key]['code'] + ">" + data[key]['full_name'] + "</option>";
                 }
                 $("#lvl3_1").html(lvl3_body); 
-                $('#lvl3_1').selectpicker('refresh'); 
+                $('#lvl3_1').selectpicker('refresh'); // <- Đã có
                 resolve(); 
             },
             error: function(xhr, status, error) {
@@ -255,3 +269,8 @@ function getRegionIdByProvinceCode(provinceCode) {
         });
     });
 }
+
+// ✅ Bắt đầu khởi tạo khi DOM ready
+$(document).ready(function() {
+    initializeSelectPicker();
+});
