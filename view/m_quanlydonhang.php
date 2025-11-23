@@ -11,11 +11,21 @@ echo "<script> var maBuuCuc = " . json_encode($maBuuCuc) . ";</script>";
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <title>Quản Lý Đơn Hàng Bưu Cục</title>
     <link rel="stylesheet" href="../css/style.css?v=22">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .badge-fixed-width {
             width: 140px; /* Đặt độ rộng cố định theo nhu cầu của bạn */
             display: inline-block;
             text-align: center;
+        }
+        .btn-print {
+            padding: 4px 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .btn-print:hover {
+            background-color: #0d6efd;
+            color: white;
         }
     </style>
 </head>
@@ -68,6 +78,7 @@ echo "<script> var maBuuCuc = " . json_encode($maBuuCuc) . ";</script>";
                 <th class="th-style3">Ngày Lập Đơn</th>
                 <th class="th-style3">Địa Chỉ Nhận</th>
                 <th class="th-style3">Trạng Thái Đơn Hàng</th>
+                <th class="th-style3">Hành Động</th>
             </tr>
         </thead>
         <tbody id="apiTableBody">
@@ -75,6 +86,6 @@ echo "<script> var maBuuCuc = " . json_encode($maBuuCuc) . ";</script>";
         </tbody>
     </table>
 </div>
-<script src="../js/m_quanlydonhang.js?v=22"></script>
+<script src="../js/m_quanlydonhang.js?v=23"></script>
 </body>
 </html>
