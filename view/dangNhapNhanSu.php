@@ -37,18 +37,13 @@
                 $userRole = $p->checkUserRoles($sdt, $mk);
 
                 if ($userRole === "Người dùng") {
-                    $_SESSION['user'] = $nd;
-                    $_SESSION['nguoidung']['id_user'] = $nd["Id_TaiKhoan"];
-                    $_SESSION['name_user'] = $nd["tenND"];
-                    
-                    header("Location: u_giaoDienNguoiDung.php"); 
-                    exit();
+                    echo "<script>alert('Tài khoản khách hàng vui lòng đăng nhập tại trang dành cho người dùng.');</script>";
                 } elseif ($userRole === "Nhân viên bưu cục") {
                     $_SESSION['user'] = $nd;
                     $_SESSION["nvbc"]['id_user'] = $nd["Id_TaiKhoan"];
                     $_SESSION['name_user'] = $nd["tenND"];
                     $buuCucInfo = $p-> getBuuCucInfo($nd['Id_TaiKhoan']);
-                    
+
 
                     if ($buuCucInfo) {
                         $_SESSION['buu_cuc_info'] = $buuCucInfo;
@@ -61,7 +56,7 @@
                     $_SESSION['user'] = $nd;
                     $_SESSION["nvgh"]['id_user'] = $nd["Id_TaiKhoan"];
                     $_SESSION['name_user'] = $nd["tenND"];
-                    header("Location: d_giaodiennguoidung.php"); 
+                    header("Location: d_giaodiennguoidung.php");
                     exit();
                 } else {
                     echo "<script>alert('Bạn không có quyền truy cập.');</script>";
