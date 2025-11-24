@@ -1,6 +1,9 @@
 <?php
 if (!isset($_SESSION['nguoidung']['id_user'])) {
-    die("id_user is not set in the session."); // Handle the error appropriately
+    // Chỉ xử lý khi truy cập trực tiếp
+    if (basename($_SERVER['SCRIPT_FILENAME']) === 'u_quanlydonhang.php') {
+        die("id_user is not set in the session.");
+    }
 }
 
 $Id_TaiKhoan = $_SESSION['nguoidung']['id_user'];

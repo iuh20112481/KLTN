@@ -1,9 +1,12 @@
 <?php
     // Bắt đầu phiên session
     // Kiểm tra xem người dùng đã đăng nhập chưa, nếu chưa thì chuyển hướng đến trang đăng nhập
+    // Chỉ redirect khi truy cập trực tiếp
     if (!isset($_SESSION['user']) || !isset($_SESSION['nguoidung']['id_user'])) {
-        header("Location: dangNhap.php");
-        exit();
+        if (basename($_SERVER['SCRIPT_FILENAME']) === 'u_thanhtoan.php') {
+            header("Location: dangNhap.php");
+            exit();
+        }
     }
 
     // Lấy giá trị của Id_TaiKhoan từ session

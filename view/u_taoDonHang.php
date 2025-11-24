@@ -11,12 +11,17 @@ if (!defined('BASE_PATH')) {
 
 // KIỂM TRA QUYỀN TRUY CẬP
 // Phần kiểm tra quyền truy cập - CẬP NHẬT
-$isCustomerLoggedIn = isset($_SESSION['user']) && $_SESSION['user']['role'] == 'khachhang';
+$isCustomerLoggedIn = isset($_SESSION['user']) && isset($_SESSION['nguoidung']['id_user']);
 $isStaffCreating = isset($_SESSION['staff_creating_order']) && $_SESSION['staff_creating_order'] === true;
 
+// Chỉ redirect nếu truy cập trực tiếp (không phải include từ u_giaoDienNguoiDung.php)
 if (!$isCustomerLoggedIn && !$isStaffCreating) {
-    header("Location: dangNhap.php");
-    exit();
+    // Kiểm tra nếu đang được include
+    $isIncluded = (basename($_SERVER['SCRIPT_FILENAME']) !== 'u_taoDonHang.php');
+    if (!$isIncluded) {
+        header("Location: dangNhap.php");
+        exit();
+    }
 }
 
 
