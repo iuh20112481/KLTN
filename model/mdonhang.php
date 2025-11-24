@@ -226,27 +226,28 @@ include_once "connect1.php";
             $conn = $p->open_kn();
             
             if ($conn) {
-                $query = "SELECT 
+                $query = "SELECT
                 donhang.Id_DonHang,
                 donhang.maVanDon,
+                donhang.trangThaiDonHang,
                 taodonhang.tenDonHang,
                 taodonhang.sdtNN,
                 taodonhang.sdtNG,
                 CONCAT(
-                    taodonhang.diaChiNhan, 
-                    ', phường ', taodonhang.phuongXaNhan, 
-                    ', ', taodonhang.quanHuyenNhan, 
+                    taodonhang.diaChiNhan,
+                    ', phường ', taodonhang.phuongXaNhan,
+                    ', ', taodonhang.quanHuyenNhan,
                     ', ', taodonhang.tinhNhan
                 ) AS diaChiNhanGop
-            FROM 
-                donhang 
-            INNER JOIN 
-                taodonhang 
+            FROM
+                donhang
+            INNER JOIN
+                taodonhang
                 ON donhang.Id_TaoDonHang = taodonhang.Id_TaoDonHang
-            WHERE 
+            WHERE
                 donhang.maNhanVien = '$maNhanVien'
                 AND
-                    donhang.trangThaiDonHang = '';
+                    donhang.trangThaiDonHang IN ('', 'Đang giao');
             "; 
                 $tbl = mysqli_query($conn, $query);
                 $p->close_kn($conn);
