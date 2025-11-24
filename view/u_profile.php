@@ -1,7 +1,10 @@
 <?php
+    // Chỉ redirect khi truy cập trực tiếp
     if (!isset($_SESSION['user']) || !isset($_SESSION["nguoidung"]['id_user'])) {
-        header("Location: dangNhap.php");
-        exit();
+        if (basename($_SERVER['SCRIPT_FILENAME']) === 'u_profile.php') {
+            header("Location: dangNhap.php");
+            exit();
+        }
     }
 
     if (isset($_SESSION['user']) || isset($_SESSION["nguoidung"]['id_user'])) {

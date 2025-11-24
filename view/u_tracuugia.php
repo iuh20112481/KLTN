@@ -92,7 +92,7 @@
     </div>
     <div class="input-container">
         <label for="start">Địa chỉ gửi:</label>
-        <input type="text" id=" " placeholder="Nhập địa điểm gửi" />
+        <input type="text" id="start" placeholder="Nhập địa điểm gửi" />
         <div id="start-suggestions" class="suggestions"></div>
     </div>
     <div class="input-container">
@@ -102,7 +102,7 @@
     </div>
     <div class="input-container">
         <label for="khoiluong_copy">Khối lượng (KG):</label>
-        <input type="number" id="khoiluong_copy" ="Nhập khối lượng" />
+        <input type="number" id="khoiluong_copy" placeholder="Nhập khối lượng" />
     </div>
     <div class="input-container">
         <label for="province_code_display">Tỉnh Giao:</label>

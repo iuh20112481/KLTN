@@ -1,4 +1,6 @@
 <?php
+header('Content-Type: application/json; charset=utf-8');
+
 if (isset($_POST['lvl1_id'])) {
     $lvl1_id = $_POST['lvl1_id'];
     fetch_lvl2_data($lvl1_id);

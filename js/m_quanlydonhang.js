@@ -30,16 +30,17 @@ function fetchData(trangThai, ngayLapDon, maVanDon) {
                         html += '<td class="text-center">' + item.ngayLapDon + '</td>';
                         html += '<td>' + item.diaChiNhanGop + '</td>';
                         html += '<td class="text-center">' + getBadge(item.trangThaiDonHang) + '</td>';
+                        html += '<td class="text-center"><button class="btn btn-outline-primary btn-print" onclick="printWaybill(' + item.Id_TaoDonHang + ')" title="In phiếu gửi hàng"><i class="fas fa-print"></i></button></td>';
                         html += '</tr>';
                     });
                 } else {
-                    html = '<tr><td colspan="10" class="text-center">Không có đơn hàng nào</td></tr>';
+                    html = '<tr><td colspan="11" class="text-center">Không có đơn hàng nào</td></tr>';
                 }
                 document.getElementById("apiTableBody").innerHTML = html;
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
-                document.getElementById("apiTableBody").innerHTML = '<tr><td colspan="10" class="text-center">Lỗi khi tải dữ liệu</td></tr>';
+                document.getElementById("apiTableBody").innerHTML = '<tr><td colspan="11" class="text-center">Lỗi khi tải dữ liệu</td></tr>';
             });
     }
 }
@@ -80,3 +81,8 @@ document.getElementById('search').addEventListener('input', function() {
 
 // Load data with default state when page loads
 fetchData(null, null, null);
+
+// Function to open print waybill page
+function printWaybill(id) {
+    window.open('../print_waybill.php?id=' + id, '_blank');
+}

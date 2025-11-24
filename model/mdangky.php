@@ -10,6 +10,13 @@ class model_dk {
         VALUES ('".$name."', '".$phone."',  '".$mk."','".$mail."', '".$mucdichsudung."', '".$classification."','".$quymovanchuyen."')";
         $result = mysqli_query($conn, $string);
 
+        // Tự động phân loại người dùng mới là "Người dùng"
+        if ($result) {
+            $newUserId = mysqli_insert_id($conn);
+            $queryPhanLoai = "INSERT INTO phanloainguoidung (Id_TaiKhoan, loaiNguoiDung) VALUES ($newUserId, 'Người dùng')";
+            mysqli_query($conn, $queryPhanLoai);
+        }
+
         $p->close_kn($conn); // Đóng kết nối
 
         return $result;

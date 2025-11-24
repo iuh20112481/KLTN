@@ -40,29 +40,11 @@
                     $_SESSION['user'] = $nd;
                     $_SESSION['nguoidung']['id_user'] = $nd["Id_TaiKhoan"];
                     $_SESSION['name_user'] = $nd["tenND"];
-                    
-                    header("Location: u_giaoDienNguoiDung.php"); 
-                    exit();
-                } elseif ($userRole === "Nhân viên bưu cục") {
-                    $_SESSION['user'] = $nd;
-                    $_SESSION["nvbc"]['id_user'] = $nd["Id_TaiKhoan"];
-                    $_SESSION['name_user'] = $nd["tenND"];
-                    $buuCucInfo = $p-> getBuuCucInfo($nd['Id_TaiKhoan']);
-                    
 
-                    if ($buuCucInfo) {
-                        $_SESSION['buu_cuc_info'] = $buuCucInfo;
-                        header("Location: m_giaodiennguoidung.php");
-                        exit();
-                    } else {
-                        echo "<script>alert('Không thể lấy thông tin về bưu cục.');</script>";
-                    }
-                } elseif ($userRole === "Nhân viên giao hàng") {
-                    $_SESSION['user'] = $nd;
-                    $_SESSION["nvgh"]['id_user'] = $nd["Id_TaiKhoan"];
-                    $_SESSION['name_user'] = $nd["tenND"];
-                    header("Location: d_giaodiennguoidung.php"); 
+                    header("Location: u_giaoDienNguoiDung.php");
                     exit();
+                } elseif ($userRole === "Nhân viên bưu cục" || $userRole === "Nhân viên giao hàng") {
+                    echo "<script>alert('Tài khoản nhân viên vui lòng đăng nhập tại trang dành cho nhân sự.');</script>";
                 } else {
                     echo "<script>alert('Bạn không có quyền truy cập.');</script>";
                 }

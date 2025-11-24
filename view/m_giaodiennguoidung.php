@@ -110,50 +110,56 @@
     </div>
 
     <!-- Navigation -->
-    <ul class="accordion ms-main-aside fs-14" id="side-nav-accordion">
-      
-      <!---Quản lý -->
-        <li class="menu-item">
-          <a href="#" class="has-chevron" data-toggle="collapse" data-target="#user" aria-expanded="false" aria-controls="user">
-            <span><i class="fa-solid fa-house"></i></i>Quản lý Bưu cục</span>
-          </a>
-          <ul id="user" class="collapse" aria-labelledby="user" data-parent="#side-nav-accordion">
-            <li> <a href="?page=tkdt">Thống kê doanh thu</a> </li>
-
-          </ul>
-        </li>
-      <!-- /Quản lý các nhân -->
-      <!-- Quản lý mục tiêu -->
-        <li class="menu-item">
-          <a href="#" class="has-chevron" data-toggle="collapse" data-target="#muctieu" aria-expanded="false" aria-controls="muctieu">
-            <span><i class="fa-solid fa-users"></i></i>Quản lý nhân sự</span>
-          </a>
-          <ul id="muctieu" class="collapse" aria-labelledby="muctieu" data-parent="#side-nav-accordion">
-            
-              <li> <a href="?page=adsnvgh">Nhân viên giao hàng</a> </li>
-              <li> <a href="?page=addnvgh">Thêm nhân viên</a> </li>
-
-          </ul>
-        </li>
-      <!-- /Quản lý mục tiêu -->
-
-      <!-- Thời gian biểu -->
-        <li class="menu-item">
-          <a href="?page=vphanloaidonhang">
-            <span><i class="fa-regular fa-calendar-days"></i>Phân đơn</span>
-          </a>
-        </li>
-      <!-- /Thời gian biểu -->
-
-      <!-- Khuyen khich dong vien -->
-        <li class="menu-item">
-          <a href="?page=qldh">
-            <span><i class="fa-regular fa-comments"></i>Quản lý đơn hàng</span>
-          </a>
-
-        </li>
-      <!-- /Khuyen khich dong vien -->
+<ul class="accordion ms-main-aside fs-14" id="side-nav-accordion">
+  
+  <!---Quản lý Bưu cục -->
+  <li class="menu-item">
+    <a href="#" class="has-chevron" data-toggle="collapse" data-target="#user" aria-expanded="false" aria-controls="user">
+      <span><i class="fa-solid fa-house"></i>Quản lý Bưu cục</span>
+    </a>
+    <ul id="user" class="collapse" aria-labelledby="user" data-parent="#side-nav-accordion">
+      <li> <a href="?page=tkdt">Thống kê doanh thu</a> </li>
     </ul>
+  </li>
+  <!-- /Quản lý Bưu cục -->
+
+  <!-- Quản lý nhân sự -->
+  <li class="menu-item">
+    <a href="#" class="has-chevron" data-toggle="collapse" data-target="#muctieu" aria-expanded="false" aria-controls="muctieu">
+      <span><i class="fa-solid fa-users"></i>Quản lý nhân sự</span>
+    </a>
+    <ul id="muctieu" class="collapse" aria-labelledby="muctieu" data-parent="#side-nav-accordion">
+      <li> <a href="?page=adsnvgh">Nhân viên giao hàng</a> </li>
+      <li> <a href="?page=addnvgh">Thêm nhân viên</a> </li>
+    </ul>
+  </li>
+  <!-- /Quản lý nhân sự -->
+
+  <!-- Phân đơn -->
+  <li class="menu-item">
+    <a href="?page=vphanloaidonhang">
+      <span><i class="fa-regular fa-calendar-days"></i>Phân đơn</span>
+    </a>
+  </li>
+  <!-- /Phân đơn -->
+
+  <!-- Quản lý đơn hàng -->
+  <li class="menu-item">
+    <a href="?page=qldh">
+      <span><i class="fa-regular fa-comments"></i>Quản lý đơn hàng</span>
+    </a>
+  </li>
+  <!-- /Quản lý đơn hàng -->
+
+  <!-- ✅ TẠOO ĐƠN HÀNG VÃNG LAI - THÊM VÀO MENU -->
+  <li class="menu-item">
+    <a href="?page=taoDonHangVangLai">
+      <span><i class="fa-solid fa-plus-circle"></i>Tạo đơn hàng vãng lai</span>
+    </a>
+  </li>
+  <!-- /TẠOO ĐƠN HÀNG VÃNG LAI -->
+
+</ul>
   </aside>
 
 
@@ -264,28 +270,38 @@
               case 'aDBO':
                   include_once('view/vdieubieton.php');
                   break;
-                case 'vphanloaidonhang':
+              case 'vphanloaidonhang':
                   include_once("m_phanloaidonhang.php");
                   break;
-                case 'adsnvgh':
+              case 'adsnvgh':
                   include_once("m_quanlyNVGH.php");
                   break;
-                case 'adx':
+              case 'adx':
                   include_once("dangxuat.php");
                   break;
-                case 'addnvgh':
+              case 'addnvgh':
                   include_once("m_themNVGH.php");
                   break;
-                case 'tkdt':
+              case 'tkdt':
                   include_once("m_thongkedoanhthu.php");
                   break;
-                case 'qldh':
+              case 'qldh':
                   include_once("m_quanlydonhang.php");
                   break;
+              case 'dangky_ho_khach':
+                  include_once("m_dangkyhokhach.php");
+                  break;
+              // ✅ TẠOO ĐƠN HÀNG VÃNG LAI
+              case 'taoDonHangVangLai':
+                  $_SESSION['staff_creating_order'] = true;
+                  include_once("m_taoDonHangVangLai.php");
+                  break;
+              // /TẠOO ĐƠN HÀNG VÃNG LAI
               default:
                   // Mặc định, có thể hiển thị trang chủ hoặc thông báo lỗi
                   include('m_nhandonhang.php');
                   // echo 'Trang không tồn tại';
+                  
         }
         }else{
           include('m_nhandonhang.php');
