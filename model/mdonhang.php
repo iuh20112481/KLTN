@@ -288,26 +288,82 @@ include_once "connect1.php";
         function updateDonHangofNVGH($idDonHang, $maNhanVien, $trangThaiDonHang, $ngayHTGiaoHang) {
             $p = new connect_db();
             $conn = $p->open_kn();
-            
+
             if ($conn) {
-                $query = "UPDATE donhang 
-                          SET trangThaiDonHang = ?, ngayHTGiaoHang = ?
-                          WHERE Id_DonHang = ? 
-                          AND maNhanVien = ?";
-                $stmt = mysqli_prepare($conn, $query);
-                
-                if ($stmt) {
+                // Nếu trạng thái là "Đã giao", tính toán hoa hồng theo phần trăm
+                if ($trangThaiDonHang == 'Đã giao') {
+                    // Lấy thông tin đơn hàng: giá vận chuyển và tỷ lệ hoa hồng
+                    $queryInfo = "SELECT
+                                    tdh.giaVanChuyen,
+                                    bc.hoaHongMoiDon as tyLeHoaHong
+                                  FROM donhang dh
+                                  JOIN taodonhang tdh ON dh.Id_TaoDonHang = tdh.Id_TaoDonHang
+                                  JOIN buucuc bc ON dh.maNhanVien = bc.maNhanVien
+                                  WHERE dh.Id_DonHang = ?";
+
+                    $stmtInfo = mysqli_prepare($conn, $queryInfo);
+                    mysqli_stmt_bind_param($stmtInfo, "i", $idDonHang);
+                    mysqli_stmt_execute($stmtInfo);
+                    $resultInfo = mysqli_stmt_get_result($stmtInfo);
+
+                    if ($rowInfo = mysqli_fetch_assoc($resultInfo)) {
+                        // Lấy giá vận chuyển (doanh thu) và tỷ lệ phần trăm
+                        $giaVanChuyen = (float)$rowInfo['giaVanChuyen'];
+                        $tyLeHoaHong = (float)$rowInfo['tyLeHoaHong'];
+
+                        // Tính hoa hồng: Tiền hoa hồng = Doanh thu × (Tỷ lệ % / 100)
+                        $hoaHongShipper = $giaVanChuyen * ($tyLeHoaHong / 100);
+
+                        // Update với hoa hồng và lưu snapshot tỷ lệ
+                        $query = "UPDATE donhang
+                                  SET trangThaiDonHang = ?,
+                                      ngayHTGiaoHang = ?,
+                                      tyLeHoaHong = ?,
+                                      hoaHongShipper = ?
+                                  WHERE Id_DonHang = ?
+                                  AND maNhanVien = ?";
+
+                        $stmt = mysqli_prepare($conn, $query);
+                        mysqli_stmt_bind_param($stmt, "ssddis",
+                            $trangThaiDonHang,
+                            $ngayHTGiaoHang,
+                            $tyLeHoaHong,
+                            $hoaHongShipper,
+                            $idDonHang,
+                            $maNhanVien
+                        );
+                    } else {
+                        // Không tìm thấy thông tin, update bình thường
+                        $query = "UPDATE donhang
+                                  SET trangThaiDonHang = ?, ngayHTGiaoHang = ?
+                                  WHERE Id_DonHang = ?
+                                  AND maNhanVien = ?";
+                        $stmt = mysqli_prepare($conn, $query);
+                        mysqli_stmt_bind_param($stmt, "ssis", $trangThaiDonHang, $ngayHTGiaoHang, $idDonHang, $maNhanVien);
+                    }
+
+                    mysqli_stmt_close($stmtInfo);
+                } else {
+                    // Trạng thái khác "Đã giao", update bình thường
+                    $query = "UPDATE donhang
+                              SET trangThaiDonHang = ?, ngayHTGiaoHang = ?
+                              WHERE Id_DonHang = ?
+                              AND maNhanVien = ?";
+                    $stmt = mysqli_prepare($conn, $query);
                     mysqli_stmt_bind_param($stmt, "ssis", $trangThaiDonHang, $ngayHTGiaoHang, $idDonHang, $maNhanVien);
+                }
+
+                if ($stmt) {
                     $result = mysqli_stmt_execute($stmt);
                     mysqli_stmt_close($stmt);
                 } else {
-                    return false; 
+                    return false;
                 }
-                
+
                 $p->close_kn($conn);
                 return $result;
             } else {
-                return false; 
+                return false;
             }
         }
         

@@ -131,6 +131,7 @@
     <ul id="muctieu" class="collapse" aria-labelledby="muctieu" data-parent="#side-nav-accordion">
       <li> <a href="?page=adsnvgh">Nhân viên giao hàng</a> </li>
       <li> <a href="?page=addnvgh">Thêm nhân viên</a> </li>
+      <li> <a href="?page=qlhoahong">Quản lý hoa hồng</a> </li>
     </ul>
   </li>
   <!-- /Quản lý nhân sự -->
@@ -281,6 +282,9 @@
                   break;
               case 'addnvgh':
                   include_once("m_themNVGH.php");
+                  break;
+              case 'qlhoahong':
+                  include_once("m_quanlyhoahong.php");
                   break;
               case 'tkdt':
                   include_once("m_thongkedoanhthu.php");

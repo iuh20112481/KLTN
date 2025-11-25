@@ -3,7 +3,11 @@
     "allow": [
       "Bash(dir:*)",
       "Bash(nul)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(cat:*)",
+      "Bash(net stop wampapache64)",
+      "Bash(net start wampapache64)",
+      "Bash(mysql:*)"
     ],
     "deny": [],
     "ask": []
