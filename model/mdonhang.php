@@ -20,56 +20,61 @@ include_once "connect1.php";
             return $address;
         }
         
-        function selectALLDonHangforNVBC() {
+        function selectALLDonHangforNVBC($tenbuucuc) {
             $p = new connect_db();
             $conn = $p->open_kn();
-            
+
             if ($conn) {
+                // Sử dụng prepared statement để tránh SQL injection
                 $query = "  SELECT DISTINCT
                                 taodonhang.Id_TaoDonHang,
                                 taodonhang.Id_TaiKhoan,
-                                taodonhang.maDonHang, 
-                                taodonhang.tenDonHang, 
-                                taodonhang.tenNG, 
-                                taodonhang.tenNN, 
+                                taodonhang.maDonHang,
+                                taodonhang.tenDonHang,
+                                taodonhang.tenNG,
+                                taodonhang.tenNN,
                                 CONCAT(
-                                    taodonhang.diaChiNhan, 
-                                    ', ', taodonhang.phuongXaNhan, 
-                                    ', ', taodonhang.quanHuyenNhan, 
+                                    taodonhang.diaChiNhan,
+                                    ', ', taodonhang.phuongXaNhan,
+                                    ', ', taodonhang.quanHuyenNhan,
                                     ', ', taodonhang.tinhNhan
-                                ) AS diaChiNhanGop, 
+                                ) AS diaChiNhanGop,
                                 taodonhang.ngayLapDon,
                                 donhang.trangThaiDonHang,
                                 donhang.maVanDon,
                                 phanloainguoidung.Id_PhanLoaiNguoiDung,
                                 taikhoan.diaChi
-                            FROM 
+                            FROM
                                 taodonhang
-                            LEFT JOIN 
-                                donhang 
+                            LEFT JOIN
+                                donhang
                                 ON taodonhang.Id_TaoDonHang = donhang.Id_TaoDonHang
-                            LEFT JOIN 
-                                taikhoan 
+                            LEFT JOIN
+                                taikhoan
                                 ON taodonhang.Id_TaiKhoan = taikhoan.Id_TaiKhoan
-                            LEFT JOIN 
-                                phanloainguoidung 
+                            LEFT JOIN
+                                phanloainguoidung
                                 ON taikhoan.Id_TaiKhoan = phanloainguoidung.Id_TaiKhoan
-                            LEFT JOIN 
-                                tenbc
-                                ON (tenbc.diaChiBC LIKE CONCAT('%', taodonhang.tinhNhan, '%')
-                                    OR tenbc.diaChiBC LIKE CONCAT('%', taodonhang.quanHuyenNhan, '%'))
-                            WHERE 
-                                donhang.maVanDon IS NULL 
-                                AND (tenbc.diaChiBC IS NOT NULL)
-                            ORDER BY 
-                                maVanDon ASC;            
-                            "; 
-                                $tbl = mysqli_query($conn, $query);
-                                $p->close_kn($conn);
-                                return $tbl; 
-                            } else {
-                                return false; 
-                            }
+                            WHERE
+                                donhang.Id_DonHang IS NULL
+                                AND (
+                                    ? LIKE CONCAT('%', taodonhang.tinhNhan, '%')
+                                    OR ? LIKE CONCAT('%', taodonhang.quanHuyenNhan, '%')
+                                )
+                            ORDER BY
+                                taodonhang.ngayLapDon DESC;
+                            ";
+
+                $stmt = mysqli_prepare($conn, $query);
+                mysqli_stmt_bind_param($stmt, "ss", $tenbuucuc, $tenbuucuc);
+                mysqli_stmt_execute($stmt);
+                $tbl = mysqli_stmt_get_result($stmt);
+                mysqli_stmt_close($stmt);
+                $p->close_kn($conn);
+                return $tbl;
+            } else {
+                return false;
+            }
         }
         
         function selectId_TaiKhoan(){

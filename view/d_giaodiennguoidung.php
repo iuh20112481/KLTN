@@ -144,6 +144,7 @@
 
                                 <li class="nav-item dropdown" >
                                     <a class="nav-link" href="?page=main" style="text-decoration:none;">Quản lý đơn giao trong ngày</a>
+                                    <a class="nav-link" href="d_loTrinhGiaoHang.php" style="text-decoration:none;">Lộ trình giao hàng</a>
                                     <a class="nav-link" href="" style="text-decoration:none;">Quản lý dòng tiền</a>
                                     <a class="nav-link" href="?page=axemdhdg" style="text-decoration:none;">Xem lại đơn hàng đã giao</a>
                                     <a class="nav-link" href="?page=aqltk" style="text-decoration:none;">Quản lý thông tin cá nhân</a>
