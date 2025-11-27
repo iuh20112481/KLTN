@@ -3,10 +3,14 @@
     include_once("../control/cdangnhap.php");
 
     if (isset($_SESSION['user'])) {
-        
+
         if (isset($_SESSION["nguoidung"])) {
             echo "<script>alert('Bạn đã đăng nhập với vai trò Người dùng.');</script>";
             header("Location: u_giaodiennguoidung.php");
+            exit();
+        } elseif (isset($_SESSION["admin"])) {
+            echo "<script>alert('Bạn đã đăng nhập với vai trò Quản trị viên.');</script>";
+            header("Location: admin_giaodiennguoidung.php");
             exit();
         } elseif (isset($_SESSION["nvbc"])) {
             echo "<script>alert('Bạn đã đăng nhập với vai trò Nhân viên bưu cục.');</script>";
@@ -38,6 +42,12 @@
 
                 if ($userRole === "Người dùng") {
                     echo "<script>alert('Tài khoản khách hàng vui lòng đăng nhập tại trang dành cho người dùng.');</script>";
+                } elseif ($userRole === "Admin") {
+                    $_SESSION['user'] = $nd;
+                    $_SESSION["admin"]['id_user'] = $nd["Id_TaiKhoan"];
+                    $_SESSION['name_user'] = $nd["tenND"];
+                    header("Location: admin_giaodiennguoidung.php");
+                    exit();
                 } elseif ($userRole === "Nhân viên bưu cục") {
                     $_SESSION['user'] = $nd;
                     $_SESSION["nvbc"]['id_user'] = $nd["Id_TaiKhoan"];

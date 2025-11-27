@@ -22,17 +22,32 @@ class controller_tk {
             return $model->getDSNVGH($maBuuCuc);
         }
 
+        public function getAllBuuCuc() {
+            $model = new model_tk();
+            return $model->getAllBuuCuc();
+        }
+
+        public function getDSNVBC() {
+            $model = new model_tk();
+            return $model->getDSNVBC();
+        }
+
         public function getcountDonHangofNVGH($maNhanVien) {
             $model = new model_tk();
             return $model->countDonHangofNVGH($maNhanVien);
-        }    
+        }
 
         public function deleteNVGH($Id_TaiKhoan) {
             $model = new model_tk();
             return $model->deleteNVGH($Id_TaiKhoan);
         }
-    
-    // kết thúc hàm     
+
+        public function deleteNVBC($Id_TaiKhoan) {
+            $model = new model_tk();
+            return $model->deleteNVBC($Id_TaiKhoan);
+        }
+
+    // kết thúc hàm
     }
 
     // Xử lý request xem thống kê đơn giao cho nhân viên giao hàng 

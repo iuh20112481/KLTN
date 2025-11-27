@@ -58,8 +58,8 @@ include_once "connect1.php";
                             WHERE
                                 donhang.Id_DonHang IS NULL
                                 AND (
-                                    ? LIKE CONCAT('%', taodonhang.tinhNhan, '%')
-                                    OR ? LIKE CONCAT('%', taodonhang.quanHuyenNhan, '%')
+                                    taodonhang.tinhNhan LIKE CONCAT('%', ?, '%')
+                                    OR taodonhang.quanHuyenNhan LIKE CONCAT('%', ?, '%')
                                 )
                             ORDER BY
                                 taodonhang.ngayLapDon DESC;
