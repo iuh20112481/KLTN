@@ -9,30 +9,35 @@ $ngayLapDon = isset($_REQUEST['ngayLapDon']) ? $_REQUEST['ngayLapDon'] : null;
 $maVanDon = isset($_REQUEST['maVanDon']) ? $_REQUEST['maVanDon'] : null;
 
 if ($maBuuCuc !== null) {
-    $query = "SELECT 
+    $query = "SELECT
         donhang.maBuuCuc,
         taodonhang.Id_TaoDonHang,
         taodonhang.Id_TaiKhoan,
-        taodonhang.maDonHang, 
-        taodonhang.tenDonHang, 
-        taodonhang.tenNG, 
-        taodonhang.tenNN, 
-        CONCAT(taodonhang.diaChiNhan, ', phường ', taodonhang.phuongXaNhan, ', ', taodonhang.quanHuyenNhan, ', ', taodonhang.tinhNhan) AS diaChiNhanGop, 
+        taodonhang.maDonHang,
+        taodonhang.tenDonHang,
+        taodonhang.tenNG,
+        taodonhang.tenNN,
+        CONCAT(taodonhang.diaChiNhan, ', phường ', taodonhang.phuongXaNhan, ', ', taodonhang.quanHuyenNhan, ', ', taodonhang.tinhNhan) AS diaChiNhanGop,
         taodonhang.ngayLapDon,
         donhang.trangThaiDonHang,
         donhang.maVanDon,
         phanloainguoidung.loaiNguoiDung,
         phanloainguoidung.Id_PhanLoaiNguoiDung
-    FROM 
+    FROM
         taodonhang
-    LEFT JOIN 
+    LEFT JOIN
         donhang ON taodonhang.Id_TaoDonHang = donhang.Id_TaoDonHang
-    LEFT JOIN 
+    LEFT JOIN
         taikhoan ON taodonhang.Id_TaiKhoan = taikhoan.Id_TaiKhoan
-    LEFT JOIN 
+    LEFT JOIN
         phanloainguoidung ON taikhoan.Id_TaiKhoan = phanloainguoidung.Id_TaiKhoan
-    WHERE 
-        donhang.maBuuCuc = '$maBuuCuc'";
+    WHERE
+        donhang.maBuuCuc IS NOT NULL";
+
+    // Nếu không phải 'all', thêm điều kiện lọc theo bưu cục
+    if ($maBuuCuc !== 'all') {
+        $query .= " AND donhang.maBuuCuc = '$maBuuCuc'";
+    }
 
     if ($maVanDon !== null && $maVanDon !== "") {
         // If a tracking number is provided, search only by tracking number

@@ -1,7 +1,16 @@
 
 <?php
-$maBuuCuc = $_SESSION['buu_cuc_info']['maBuuCuc'];
-echo "<script> var maBuuCuc = " . json_encode($maBuuCuc) . ";</script>";
+// Kiểm tra quyền: Admin hay NVBC
+$isAdmin = isset($_SESSION['admin']) ? true : false;
+$maBuuCuc = 'all';
+
+if (!$isAdmin && isset($_SESSION['buu_cuc_info']) && isset($_SESSION['buu_cuc_info']['maBuuCuc'])) {
+    // NVBC chỉ xem doanh thu của bưu cục mình
+    $maBuuCuc = $_SESSION['buu_cuc_info']['maBuuCuc'];
+}
+
+echo "<script> var defaultMaBuuCuc = " . json_encode($maBuuCuc) . ";</script>";
+echo "<script> var isAdmin = " . json_encode($isAdmin) . ";</script>";
 ?>
 
 <!DOCTYPE html>
@@ -39,6 +48,26 @@ echo "<script> var maBuuCuc = " . json_encode($maBuuCuc) . ";</script>";
 <body>
 <div class="container-fluid">
      <h2 id="h2-content" class="text-center mt-3 p-1" style="color: darkblue;">Thống kê doanh thu</h2>
+
+     <!-- Dropdown chọn bưu cục (chỉ cho Admin) -->
+     <?php if ($isAdmin): ?>
+     <div class="row justify-content-center mt-3 mb-3">
+         <div class="col-md-6">
+             <div class="card">
+                 <div class="card-body">
+                     <label for="selectBuuCuc" class="form-label fw-bold">
+                         <i class="fa-solid fa-building"></i> Chọn bưu cục:
+                     </label>
+                     <select class="form-select" id="selectBuuCuc" onchange="loadDoanhThuByBuuCuc()">
+                         <option value="all">Tất cả bưu cục</option>
+                         <!-- Các option bưu cục sẽ được thêm vào đây bằng JavaScript -->
+                     </select>
+                 </div>
+             </div>
+         </div>
+     </div>
+     <?php endif; ?>
+
     <div class="container-fluid mt-1">
         <div class="row" id="cardRow">
             <!-- Các thẻ card sẽ được thêm vào đây bằng JavaScript -->
@@ -104,6 +133,50 @@ echo "<script> var maBuuCuc = " . json_encode($maBuuCuc) . ";</script>";
 </div>
 
 <script>
+        // Load danh sách bưu cục (chỉ cho admin)
+        function loadDanhSachBuuCuc() {
+            if (!isAdmin) return; // NVBC không cần load dropdown
+
+            fetch('http://localhost:8080/WEBSITE_EXHIBITION/API/API_getDanhSachBuuCuc.php')
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        const selectElement = document.getElementById('selectBuuCuc');
+                        result.data.forEach(buuCuc => {
+                            const option = document.createElement('option');
+                            option.value = buuCuc.maBuuCuc;
+                            option.textContent = buuCuc.tenBuuCuc + ' - ' + buuCuc.diaChiBC;
+                            selectElement.appendChild(option);
+                        });
+
+                        // Set giá trị mặc định
+                        if (defaultMaBuuCuc && defaultMaBuuCuc !== 'all') {
+                            selectElement.value = defaultMaBuuCuc;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Lỗi khi load danh sách bưu cục:', error);
+                });
+        }
+
+        // Hàm xử lý khi chọn bưu cục
+        function loadDoanhThuByBuuCuc() {
+            const selectElement = document.getElementById('selectBuuCuc');
+            const maBuuCuc = selectElement.value;
+
+            // Xóa dữ liệu cũ
+            document.getElementById('cardRow').innerHTML = '';
+
+            // Load dữ liệu mới cho các card
+            getDoanhThuFromAPI(maBuuCuc);
+
+            // Cập nhật biểu đồ (nếu function updatePieChart tồn tại)
+            if (typeof updatePieChart === 'function') {
+                updatePieChart(maBuuCuc);
+            }
+        }
+
         function getDoanhThuFromAPI(maBuuCuc) {
             fetch('http://localhost:8080/WEBSITE_EXHIBITION/API/API_xemDoanhThuBC.php?maBuuCuc=' + maBuuCuc)
                 .then(response => response.json())
@@ -117,13 +190,12 @@ echo "<script> var maBuuCuc = " . json_encode($maBuuCuc) . ";</script>";
         }
 
         function displayData(data) {
-            const statuses = ['Đã giao', 'Đang giao', 'Đã hủy', 'Đang chờ phân đơn', 'Đã phân đơn'];
+            const statuses = ['Đã giao', 'Đang giao', 'Đã hủy', 'Đang chờ phân đơn'];
             const colors = {
                 'Đã giao': 'success',
                 'Đang giao': 'primary',
                 'Đã hủy': 'danger',
-                'Đang chờ phân đơn': 'warning',
-                'Đã phân đơn': 'info'
+                'Đang chờ phân đơn': 'warning'
             };
         
 
@@ -159,7 +231,11 @@ echo "<script> var maBuuCuc = " . json_encode($maBuuCuc) . ";</script>";
         }
 
         window.onload = function() {
-            getDoanhThuFromAPI(maBuuCuc);
+            // Load danh sách bưu cục
+            loadDanhSachBuuCuc();
+
+            // Load dữ liệu doanh thu với mã bưu cục mặc định
+            getDoanhThuFromAPI(defaultMaBuuCuc || 'all');
         };
 
         document.addEventListener('click', function(event) {

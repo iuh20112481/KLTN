@@ -126,8 +126,6 @@
     <ul id="nhansu" class="collapse" aria-labelledby="nhansu" data-parent="#side-nav-accordion">
       <li> <a href="?page=qlnvbc">Nhân viên bưu cục</a> </li>
       <li> <a href="?page=adsnvgh">Nhân viên giao hàng</a> </li>
-      <li> <a href="?page=addnvbc">Thêm nhân viên bưu cục</a> </li>
-      <li> <a href="?page=addnvgh">Thêm nhân viên giao hàng</a> </li>
       <li> <a href="?page=qlhoahong">Quản lý hoa hồng</a> </li>
     </ul>
   </li>
@@ -140,14 +138,6 @@
     </a>
   </li>
   <!-- /Phân quyền -->
-
-  <!-- Phân đơn -->
-  <li class="menu-item">
-    <a href="?page=vphanloaidonhang">
-      <span><i class="fa-regular fa-calendar-days"></i>Phân đơn</span>
-    </a>
-  </li>
-  <!-- /Phân đơn -->
 
   <!-- Quản lý đơn hàng -->
   <li class="menu-item">
@@ -256,12 +246,6 @@
                   break;
               case 'adx':
                   include_once("dangxuat.php");
-                  break;
-              case 'addnvbc':
-                  echo '<div class="container mt-5"><h3><i class="fas fa-user-plus"></i> Thêm nhân viên bưu cục</h3><p class="text-muted">Chức năng đang được phát triển...</p></div>';
-                  break;
-              case 'addnvgh':
-                  include_once("m_themNVGH.php");
                   break;
               case 'qlhoahong':
                   include_once("m_quanlyhoahong.php");

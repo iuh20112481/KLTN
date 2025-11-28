@@ -16,25 +16,47 @@ if (!$link) {
 // Hàm lấy thông tin doanh thu theo trạng thái đơn hàng
 function getDoanhThuByStatus($maBuuCuc, $status, $link) {
     // Truy vấn SQL
-    $sql = "SELECT 
-                COUNT(taodonhang.giaVanChuyen) AS soLuong,
-                SUM(taodonhang.giaVanChuyen) AS tongGiaVanChuyen,
-                GROUP_CONCAT(CONCAT_WS('|', taodonhang.Id_TaoDonHang, 
-                                            taodonhang.maDonHang, 
-                                            taodonhang.tenDonHang,
-                                            taodonhang.tenNG,
-                                            taodonhang.tenNN,
-                                            taodonhang.ngayLapDon,
-                                            taodonhang.giaVanChuyen
-                                ) SEPARATOR ';') AS chiTietDonHang
-            FROM 
-                taodonhang 
-            JOIN 
-                donhang ON taodonhang.Id_TaoDonHang = donhang.Id_TaoDonHang 
-            WHERE 
-                donhang.maBuuCuc = '$maBuuCuc' 
-                AND donhang.trangThaiDonHang = '$status'";
-    
+    if ($maBuuCuc === 'all') {
+        // Lấy doanh thu của tất cả bưu cục
+        $sql = "SELECT
+                    COUNT(taodonhang.giaVanChuyen) AS soLuong,
+                    SUM(taodonhang.giaVanChuyen) AS tongGiaVanChuyen,
+                    GROUP_CONCAT(CONCAT_WS('|', taodonhang.Id_TaoDonHang,
+                                                taodonhang.maDonHang,
+                                                taodonhang.tenDonHang,
+                                                taodonhang.tenNG,
+                                                taodonhang.tenNN,
+                                                taodonhang.ngayLapDon,
+                                                taodonhang.giaVanChuyen
+                                    ) SEPARATOR ';') AS chiTietDonHang
+                FROM
+                    taodonhang
+                JOIN
+                    donhang ON taodonhang.Id_TaoDonHang = donhang.Id_TaoDonHang
+                WHERE
+                    donhang.trangThaiDonHang = '$status'";
+    } else {
+        // Lấy doanh thu của bưu cục cụ thể
+        $sql = "SELECT
+                    COUNT(taodonhang.giaVanChuyen) AS soLuong,
+                    SUM(taodonhang.giaVanChuyen) AS tongGiaVanChuyen,
+                    GROUP_CONCAT(CONCAT_WS('|', taodonhang.Id_TaoDonHang,
+                                                taodonhang.maDonHang,
+                                                taodonhang.tenDonHang,
+                                                taodonhang.tenNG,
+                                                taodonhang.tenNN,
+                                                taodonhang.ngayLapDon,
+                                                taodonhang.giaVanChuyen
+                                    ) SEPARATOR ';') AS chiTietDonHang
+                FROM
+                    taodonhang
+                JOIN
+                    donhang ON taodonhang.Id_TaoDonHang = donhang.Id_TaoDonHang
+                WHERE
+                    donhang.maBuuCuc = '$maBuuCuc'
+                    AND donhang.trangThaiDonHang = '$status'";
+    }
+
     // Thực hiện truy vấn
     $result = mysqli_query($link, $sql);
     
@@ -50,8 +72,7 @@ function getDoanhThuByStatus($maBuuCuc, $status, $link) {
         'Đã giao' => 'success',
         'Đang giao' => 'primary',
         'Đã hủy' => 'danger',
-        'Đang chờ phân đơn' => 'warning',
-        'Đã phân đơn' => 'info'
+        'Đang chờ phân đơn' => 'warning'
     );
 
     $doanhThu = array(
@@ -70,7 +91,7 @@ function getDoanhThuByStatus($maBuuCuc, $status, $link) {
 $maBuuCuc = $_GET['maBuuCuc'] ?? null;
 
 // Kiểm tra xem maBuuCuc có tồn tại không
-if (!$maBuuCuc) {
+if (!$maBuuCuc || $maBuuCuc === '') {
     echo json_encode(array('message' => 'Không có mã bưu cục được cung cấp'));
     exit();
 }
@@ -80,15 +101,13 @@ $doanhThuDaGiao = getDoanhThuByStatus($maBuuCuc, 'Đã giao', $link);
 $doanhThuDangGiao = getDoanhThuByStatus($maBuuCuc, 'Đang giao', $link);
 $doanhThuHuy = getDoanhThuByStatus($maBuuCuc, 'Đã hủy', $link);
 $dangChoPhanDon = getDoanhThuByStatus($maBuuCuc, 'Đang chờ phân đơn', $link);
-$dangchuyendongiao = getDoanhThuByStatus($maBuuCuc, 'Đã phân đơn', $link);
 
 // Kết hợp thông tin từ các trạng thái thành một mảng
 $allDoanhThu = array(
     $doanhThuDaGiao,
     $doanhThuDangGiao,
     $doanhThuHuy,
-    $dangChoPhanDon,
-    $dangchuyendongiao
+    $dangChoPhanDon
 );
 
 
