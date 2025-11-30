@@ -38,9 +38,9 @@ $query = "SELECT
                 donhang ON donhang.Id_TaoDonHang = taodonhang.Id_TaoDonHang 
                 JOIN 
                 taikhoan ON taikhoan.Id_TaiKhoan = taodonhang.Id_TaiKhoan 
-                WHERE 
+                WHERE
                 taodonhang.Id_TaiKhoan = ?
-                AND taodonhang.phiThuHo = ''
+                AND (taodonhang.phiThuHo = '' OR taodonhang.phiThuHo = 0 OR taodonhang.phiThuHo IS NULL)
                 AND NOT EXISTS (
                     SELECT 1
                     FROM giaodich
