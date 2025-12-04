@@ -44,9 +44,17 @@
                     echo "<td class='text-center'>{$dh['sdtNN']}</td>";
                     echo "<td class='text-center'>" . date('d/m/Y') . "</td>";
                     echo "<td class='action-buttons'>";
-                    echo "<button class='btn btn-accept update-status' data-id='{$dh['Id_DonHang']}' data-status='Đã giao'>Đã giao</button>";
-                    echo "<button class='btn btn-shipping update-status' data-id='{$dh['Id_DonHang']}' data-status='Đang giao'>Đang giao</button>";
-                    echo "<button class='btn btn-cancel update-status' data-id='{$dh['Id_DonHang']}' data-status='Đã hủy'>Đã hủy</button>";
+                    if ($dh['trangThaiDonHang'] == 'Đang giao') {
+                        // Đơn đang giao - hiển thị nút Đã giao và Đã hủy, mờ nút Đang giao
+                        echo "<button class='btn btn-accept update-status' data-id='{$dh['Id_DonHang']}' data-status='Đã giao'>Đã giao</button>";
+                        echo "<button class='btn btn-shipping update-status active' data-id='{$dh['Id_DonHang']}' data-status='Đang giao' disabled style='opacity: 0.5;'>Đang giao</button>";
+                        echo "<button class='btn btn-cancel update-status' data-id='{$dh['Id_DonHang']}' data-status='Đã hủy'>Đã hủy</button>";
+                    } else {
+                        // Đơn mới - hiển thị tất cả nút
+                        echo "<button class='btn btn-accept update-status' data-id='{$dh['Id_DonHang']}' data-status='Đã giao'>Đã giao</button>";
+                        echo "<button class='btn btn-shipping update-status' data-id='{$dh['Id_DonHang']}' data-status='Đang giao'>Đang giao</button>";
+                        echo "<button class='btn btn-cancel update-status' data-id='{$dh['Id_DonHang']}' data-status='Đã hủy'>Đã hủy</button>";
+                    }
                     echo "</td>";
                     echo "</tr>";
                     $i++;

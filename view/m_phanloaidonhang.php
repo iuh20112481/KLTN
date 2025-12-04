@@ -18,14 +18,22 @@
         $donHang = null; // Hoặc giá trị mặc định khác phù hợp
     }
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        if (isset($_POST['Id_TaoDonHang'], $_POST['maNhanVien']) && is_array($_POST['Id_TaoDonHang']) && is_array($_POST['maNhanVien'])) {
-            foreach ($_POST['Id_TaoDonHang'] as $index => $idDonHang) {
-                $maNhanVien = $_POST['maNhanVien'][$index] ?? ''; 
-                $ngayPhanHangGiao = date('d-m-Y'); 
-                $trangThaiDonHangGiao = '';
-                if ($idDonHang && $maNhanVien) {
+        if (isset($_POST['maNhanVien']) && is_array($_POST['maNhanVien'])) {
+            $ngayPhanHangGiao = date('d-m-Y');
+            $trangThaiDonHangGiao = '';
+            $updated = false;
+
+            foreach ($_POST['maNhanVien'] as $idDonHang => $maNhanVien) {
+                if (!empty($maNhanVien) && $idDonHang) {
                     $p->updateDonHangforNVGH($idDonHang, $maNhanVien, $ngayPhanHangGiao, $trangThaiDonHangGiao);
+                    $updated = true;
                 }
+            }
+
+            if ($updated) {
+                header('Location: ' . $_SERVER['PHP_SELF'] . '?page=vphanloaidonhang');
+            } else {
+                echo "Bạn chưa chọn nhân viên giao hàng cho đơn hàng nào!";
             }
             exit();
         } else {
@@ -73,12 +81,10 @@
                             echo "<td>" . $dh['diaChiNhanGop'] . "</td>";
                             echo "<td style='text-align: center;'>" . $dh['maVanDon'] . "</td>";
                             echo "<td style='text-align: center;'>" . date('d/m/Y') . "</td>";
-                            
-                            echo "<input type='hidden' name='Id_TaoDonHang[]' value='" . $dh['Id_TaoDonHang'] . "'>";
 
                             echo "<td class='action-select' style='text-align: center;'>";
-                            echo "<select name='maNhanVien[]'>";
-                            echo "<option value='' selected disabled>Chọn nhân viên giao hàng</option>";
+                            echo "<select name='maNhanVien[" . $dh['Id_TaoDonHang'] . "]'>";
+                            echo "<option value='' selected>Chọn nhân viên giao hàng</option>";
                             if ($nhanVienGiaoHang && mysqli_num_rows($nhanVienGiaoHang) > 0) {
                                 mysqli_data_seek($nhanVienGiaoHang, 0);
                                 while ($nv = mysqli_fetch_assoc($nhanVienGiaoHang)) {
@@ -134,20 +140,3 @@
     </script>
 </body>
 </html>
-
-<?php
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['submit-pldh'])) {
-    if (isset($_GET['Id_TaoDonHang'], $_GET['maNhanVien']) && is_array($_GET['Id_TaoDonHang']) && is_array($_GET['maNhanVien'])) {
-        foreach ($_GET['Id_TaoDonHang'] as $index => $idDonHang) {
-            $maNhanVien = $_GET['maNhanVien'][$index] ?? ''; 
-            $ngayPhanHangGiao = date('d-m-Y'); 
-            $trangThaiDonHangGiao = '';
-            if ($idDonHang && $maNhanVien) {
-                $p->updateDonHangforNVGH($idDonHang, $maNhanVien, $ngayPhanHangGiao , $trangThaiDonHangGiao);
-            }
-        }
-    } else {
-        echo "Bạn chưa chọn nhân viên giao hàng cho đơn hàng nào!";
-    }
-}
-?>

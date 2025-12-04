@@ -30,10 +30,11 @@
             }
         }
 
-        // Chỉ gọi hàm getAllDonHangforNVBC() khi có giá trị cho $tenbuucuc
-        $tenbuucuc = $_SESSION['buu_cuc_info']['diaChiBC'] ?? null;
-        if ($tenbuucuc !== null) {
-            $donHang = $p->getAllDonHangforNVBC($tenbuucuc);
+        // Chỉ gọi hàm getAllDonHangforNVBC() khi có giá trị cho $tinhPhuTrach
+        // Sử dụng tinhPhuTrach thay vì diaChiBC để filter chính xác theo tỉnh
+        $tinhPhuTrach = $_SESSION['buu_cuc_info']['tinhPhuTrach'] ?? null;
+        if ($tinhPhuTrach !== null) {
+            $donHang = $p->getAllDonHangforNVBC($tinhPhuTrach);
         } else {
             $donHang = null; // Hoặc giá trị mặc định khác phù hợp
         }
@@ -51,7 +52,7 @@
 </head>
 <body>
     <h2 id="h2-content" class="text-center mt-2 p-1">Nhận Đơn Hàng</h2>
-    <input type="hidden" class="tenbuucuc" id="tenbuucuc" value="<?php echo $_SESSION['buu_cuc_info']['diaChiBC']; ?>">
+    <input type="hidden" class="tenbuucuc" id="tenbuucuc" value="<?php echo $_SESSION['buu_cuc_info']['tinhPhuTrach'] ?? $_SESSION['buu_cuc_info']['diaChiBC']; ?>">
 <div class="container-fluid">
     <table class="nhandonhang">
         <thead>

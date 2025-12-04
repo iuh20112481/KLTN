@@ -57,30 +57,31 @@ class model_dn {
         $conn = $p->open_kn();
 
         if ($conn) {
-            $query = "SELECT 
-                            buucuc.Id_TenBC, 
-                            buucuc.maBuuCuc, 
+            $query = "SELECT
+                            buucuc.Id_TenBC,
+                            buucuc.maBuuCuc,
                             buucuc.Id_PhanLoaiNguoiDung,
                             tenbc.tenBuuCuc,
-                            tenbc.diaChiBC
-                        FROM 
+                            tenbc.diaChiBC,
+                            tenbc.tinhPhuTrach
+                        FROM
                             buucuc
                         JOIN tenbc ON buucuc.Id_TenBC = tenbc.Id_TenBC
-                        WHERE 
+                        WHERE
                             buucuc.Id_TaiKhoan = ?
-                        LIMIT 
+                        LIMIT
                             1;
                     ";
             $stmt = mysqli_prepare($conn, $query);
             mysqli_stmt_bind_param($stmt, "i", $idTaiKhoan);
             mysqli_stmt_execute($stmt);
-            mysqli_stmt_bind_result($stmt, $Id_TenBC, $maBuuCuc, $Id_PhanLoaiNguoiDung, $tenBuuCuc, $diaChiBC);
+            mysqli_stmt_bind_result($stmt, $Id_TenBC, $maBuuCuc, $Id_PhanLoaiNguoiDung, $tenBuuCuc, $diaChiBC, $tinhPhuTrach);
             mysqli_stmt_fetch($stmt);
             mysqli_stmt_close($stmt);
             $p->close_kn($conn);
 
             if(isset($Id_TenBC)) {
-                return array("Id_TenBC" => $Id_TenBC, "maBuuCuc" => $maBuuCuc, "Id_PhanLoaiNguoiDung" => $Id_PhanLoaiNguoiDung, "tenBuuCuc" => $tenBuuCuc, "diaChiBC" => $diaChiBC);
+                return array("Id_TenBC" => $Id_TenBC, "maBuuCuc" => $maBuuCuc, "Id_PhanLoaiNguoiDung" => $Id_PhanLoaiNguoiDung, "tenBuuCuc" => $tenBuuCuc, "diaChiBC" => $diaChiBC, "tinhPhuTrach" => $tinhPhuTrach);
             } else {
                 return false;
             }

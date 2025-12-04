@@ -20,56 +20,61 @@ include_once "connect1.php";
             return $address;
         }
         
-        function selectALLDonHangforNVBC() {
+        function selectALLDonHangforNVBC($tenbuucuc) {
             $p = new connect_db();
             $conn = $p->open_kn();
-            
+
             if ($conn) {
+                // Sử dụng prepared statement để tránh SQL injection
                 $query = "  SELECT DISTINCT
                                 taodonhang.Id_TaoDonHang,
                                 taodonhang.Id_TaiKhoan,
-                                taodonhang.maDonHang, 
-                                taodonhang.tenDonHang, 
-                                taodonhang.tenNG, 
-                                taodonhang.tenNN, 
+                                taodonhang.maDonHang,
+                                taodonhang.tenDonHang,
+                                taodonhang.tenNG,
+                                taodonhang.tenNN,
                                 CONCAT(
-                                    taodonhang.diaChiNhan, 
-                                    ', ', taodonhang.phuongXaNhan, 
-                                    ', ', taodonhang.quanHuyenNhan, 
+                                    taodonhang.diaChiNhan,
+                                    ', ', taodonhang.phuongXaNhan,
+                                    ', ', taodonhang.quanHuyenNhan,
                                     ', ', taodonhang.tinhNhan
-                                ) AS diaChiNhanGop, 
+                                ) AS diaChiNhanGop,
                                 taodonhang.ngayLapDon,
                                 donhang.trangThaiDonHang,
                                 donhang.maVanDon,
                                 phanloainguoidung.Id_PhanLoaiNguoiDung,
                                 taikhoan.diaChi
-                            FROM 
+                            FROM
                                 taodonhang
-                            LEFT JOIN 
-                                donhang 
+                            LEFT JOIN
+                                donhang
                                 ON taodonhang.Id_TaoDonHang = donhang.Id_TaoDonHang
-                            LEFT JOIN 
-                                taikhoan 
+                            LEFT JOIN
+                                taikhoan
                                 ON taodonhang.Id_TaiKhoan = taikhoan.Id_TaiKhoan
-                            LEFT JOIN 
-                                phanloainguoidung 
+                            LEFT JOIN
+                                phanloainguoidung
                                 ON taikhoan.Id_TaiKhoan = phanloainguoidung.Id_TaiKhoan
-                            LEFT JOIN 
-                                tenbc
-                                ON (tenbc.diaChiBC LIKE CONCAT('%', taodonhang.tinhNhan, '%')
-                                    OR tenbc.diaChiBC LIKE CONCAT('%', taodonhang.quanHuyenNhan, '%'))
-                            WHERE 
-                                donhang.maVanDon IS NULL 
-                                AND (tenbc.diaChiBC IS NOT NULL)
-                            ORDER BY 
-                                maVanDon ASC;            
-                            "; 
-                                $tbl = mysqli_query($conn, $query);
-                                $p->close_kn($conn);
-                                return $tbl; 
-                            } else {
-                                return false; 
-                            }
+                            WHERE
+                                donhang.Id_DonHang IS NULL
+                                AND (
+                                    taodonhang.tinhNhan LIKE CONCAT('%', ?, '%')
+                                    OR taodonhang.quanHuyenNhan LIKE CONCAT('%', ?, '%')
+                                )
+                            ORDER BY
+                                taodonhang.ngayLapDon DESC;
+                            ";
+
+                $stmt = mysqli_prepare($conn, $query);
+                mysqli_stmt_bind_param($stmt, "ss", $tenbuucuc, $tenbuucuc);
+                mysqli_stmt_execute($stmt);
+                $tbl = mysqli_stmt_get_result($stmt);
+                mysqli_stmt_close($stmt);
+                $p->close_kn($conn);
+                return $tbl;
+            } else {
+                return false;
+            }
         }
         
         function selectId_TaiKhoan(){
@@ -226,27 +231,28 @@ include_once "connect1.php";
             $conn = $p->open_kn();
             
             if ($conn) {
-                $query = "SELECT 
+                $query = "SELECT
                 donhang.Id_DonHang,
                 donhang.maVanDon,
+                donhang.trangThaiDonHang,
                 taodonhang.tenDonHang,
                 taodonhang.sdtNN,
                 taodonhang.sdtNG,
                 CONCAT(
-                    taodonhang.diaChiNhan, 
-                    ', phường ', taodonhang.phuongXaNhan, 
-                    ', ', taodonhang.quanHuyenNhan, 
+                    taodonhang.diaChiNhan,
+                    ', phường ', taodonhang.phuongXaNhan,
+                    ', ', taodonhang.quanHuyenNhan,
                     ', ', taodonhang.tinhNhan
                 ) AS diaChiNhanGop
-            FROM 
-                donhang 
-            INNER JOIN 
-                taodonhang 
+            FROM
+                donhang
+            INNER JOIN
+                taodonhang
                 ON donhang.Id_TaoDonHang = taodonhang.Id_TaoDonHang
-            WHERE 
+            WHERE
                 donhang.maNhanVien = '$maNhanVien'
                 AND
-                    donhang.trangThaiDonHang = '';
+                    donhang.trangThaiDonHang IN ('', 'Đang giao');
             "; 
                 $tbl = mysqli_query($conn, $query);
                 $p->close_kn($conn);
@@ -282,26 +288,82 @@ include_once "connect1.php";
         function updateDonHangofNVGH($idDonHang, $maNhanVien, $trangThaiDonHang, $ngayHTGiaoHang) {
             $p = new connect_db();
             $conn = $p->open_kn();
-            
+
             if ($conn) {
-                $query = "UPDATE donhang 
-                          SET trangThaiDonHang = ?, ngayHTGiaoHang = ?
-                          WHERE Id_DonHang = ? 
-                          AND maNhanVien = ?";
-                $stmt = mysqli_prepare($conn, $query);
-                
-                if ($stmt) {
+                // Nếu trạng thái là "Đã giao", tính toán hoa hồng theo phần trăm
+                if ($trangThaiDonHang == 'Đã giao') {
+                    // Lấy thông tin đơn hàng: giá vận chuyển và tỷ lệ hoa hồng
+                    $queryInfo = "SELECT
+                                    tdh.giaVanChuyen,
+                                    bc.hoaHongMoiDon as tyLeHoaHong
+                                  FROM donhang dh
+                                  JOIN taodonhang tdh ON dh.Id_TaoDonHang = tdh.Id_TaoDonHang
+                                  JOIN buucuc bc ON dh.maNhanVien = bc.maNhanVien
+                                  WHERE dh.Id_DonHang = ?";
+
+                    $stmtInfo = mysqli_prepare($conn, $queryInfo);
+                    mysqli_stmt_bind_param($stmtInfo, "i", $idDonHang);
+                    mysqli_stmt_execute($stmtInfo);
+                    $resultInfo = mysqli_stmt_get_result($stmtInfo);
+
+                    if ($rowInfo = mysqli_fetch_assoc($resultInfo)) {
+                        // Lấy giá vận chuyển (doanh thu) và tỷ lệ phần trăm
+                        $giaVanChuyen = (float)$rowInfo['giaVanChuyen'];
+                        $tyLeHoaHong = (float)$rowInfo['tyLeHoaHong'];
+
+                        // Tính hoa hồng: Tiền hoa hồng = Doanh thu × (Tỷ lệ % / 100)
+                        $hoaHongShipper = $giaVanChuyen * ($tyLeHoaHong / 100);
+
+                        // Update với hoa hồng và lưu snapshot tỷ lệ
+                        $query = "UPDATE donhang
+                                  SET trangThaiDonHang = ?,
+                                      ngayHTGiaoHang = ?,
+                                      tyLeHoaHong = ?,
+                                      hoaHongShipper = ?
+                                  WHERE Id_DonHang = ?
+                                  AND maNhanVien = ?";
+
+                        $stmt = mysqli_prepare($conn, $query);
+                        mysqli_stmt_bind_param($stmt, "ssddis",
+                            $trangThaiDonHang,
+                            $ngayHTGiaoHang,
+                            $tyLeHoaHong,
+                            $hoaHongShipper,
+                            $idDonHang,
+                            $maNhanVien
+                        );
+                    } else {
+                        // Không tìm thấy thông tin, update bình thường
+                        $query = "UPDATE donhang
+                                  SET trangThaiDonHang = ?, ngayHTGiaoHang = ?
+                                  WHERE Id_DonHang = ?
+                                  AND maNhanVien = ?";
+                        $stmt = mysqli_prepare($conn, $query);
+                        mysqli_stmt_bind_param($stmt, "ssis", $trangThaiDonHang, $ngayHTGiaoHang, $idDonHang, $maNhanVien);
+                    }
+
+                    mysqli_stmt_close($stmtInfo);
+                } else {
+                    // Trạng thái khác "Đã giao", update bình thường
+                    $query = "UPDATE donhang
+                              SET trangThaiDonHang = ?, ngayHTGiaoHang = ?
+                              WHERE Id_DonHang = ?
+                              AND maNhanVien = ?";
+                    $stmt = mysqli_prepare($conn, $query);
                     mysqli_stmt_bind_param($stmt, "ssis", $trangThaiDonHang, $ngayHTGiaoHang, $idDonHang, $maNhanVien);
+                }
+
+                if ($stmt) {
                     $result = mysqli_stmt_execute($stmt);
                     mysqli_stmt_close($stmt);
                 } else {
-                    return false; 
+                    return false;
                 }
-                
+
                 $p->close_kn($conn);
                 return $result;
             } else {
-                return false; 
+                return false;
             }
         }
         

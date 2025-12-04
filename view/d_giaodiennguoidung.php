@@ -144,7 +144,8 @@
 
                                 <li class="nav-item dropdown" >
                                     <a class="nav-link" href="?page=main" style="text-decoration:none;">Quản lý đơn giao trong ngày</a>
-                                    <a class="nav-link" href="" style="text-decoration:none;">Quản lý dòng tiền</a>
+                                    <a class="nav-link" href="d_loTrinhGiaoHang.php" style="text-decoration:none;">Lộ trình giao hàng</a>
+                                    <a class="nav-link" href="?page=aqldtt" style="text-decoration:none;">Quản lý dòng tiền</a>
                                     <a class="nav-link" href="?page=axemdhdg" style="text-decoration:none;">Xem lại đơn hàng đã giao</a>
                                     <a class="nav-link" href="?page=aqltk" style="text-decoration:none;">Quản lý thông tin cá nhân</a>
                                     <a class="nav-link" href="" style="text-decoration:none;">Quản lý Báo cáo</a>
@@ -172,6 +173,9 @@
                         break;
                     case 'axemdhdg':
                         include('d_xemlaidonhanggiao.php');
+                        break;
+                    case 'aqldtt':
+                        include('d_quanlydongtien.php');
                         break;
                     case 'aPR':
                         include('u_profile.php');

@@ -49,6 +49,8 @@
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+    <!-- Container cho thông báo -->
+    <div id="alertContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px;"></div>
 
     <div class="d-flex justify-content-center align-items-center" style="min-height: 90vh; background-color: #f8f9fa;">  <!-- Căn giữa cả chiều ngang và chiều dọc -->
         <div class="col-md-8 col-lg-6 form-wrapper p-6 rounded-lg" style="background-color: #f3f3f3;">  <!-- Giới hạn chiều rộng -->
@@ -128,7 +130,75 @@
                 </div>
             </form>
         </div>
-    </div>    
-    
+    </div>
+
+    <!-- jQuery và Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#employeeForm').on('submit', function(e) {
+                e.preventDefault(); // Ngăn form submit mặc định
+
+                // Lấy dữ liệu form
+                var formData = $(this).serialize();
+
+                // Gửi request AJAX
+                $.ajax({
+                    url: '../control/cthemNVGH.php',
+                    type: 'POST',
+                    data: formData,
+                    dataType: 'json',
+                    success: function(response) {
+                        // Hiển thị thông báo
+                        showAlert(response.success, response.message);
+
+                        // Nếu thành công, reset form và cập nhật mã nhân viên mới
+                        if (response.success) {
+                            // Reset form trừ mã bưu cục và Id_TenBC
+                            $('#tennv').val('');
+                            $('#pass').val('');
+                            $('#email').val('');
+                            $('#sdt').val('');
+                            $('#ngaysinh').val('');
+                            $('#gioitinh').val('');
+
+                            // Tăng mã nhân viên lên 1 cho lần thêm tiếp theo
+                            var currentMaNV = parseInt($('#manhanvien').val());
+                            $('#manhanvien').val(currentMaNV + 1);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        showAlert(false, 'Có lỗi xảy ra khi gửi dữ liệu: ' + error);
+                    }
+                });
+            });
+
+            // Hàm hiển thị thông báo
+            function showAlert(isSuccess, message) {
+                var alertType = isSuccess ? 'alert-success' : 'alert-danger';
+                var alertTitle = isSuccess ? 'Thành công!' : 'Lỗi!';
+
+                var alertHtml = `
+                    <div class="alert ${alertType} alert-dismissible fade show" role="alert">
+                        <strong>${alertTitle}</strong> ${message}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                `;
+
+                $('#alertContainer').html(alertHtml);
+
+                // Tự động ẩn sau 5 giây
+                setTimeout(function() {
+                    $('#alertContainer .alert').fadeOut('slow', function() {
+                        $(this).remove();
+                    });
+                }, 5000);
+            }
+        });
+    </script>
 </body>
 </html>

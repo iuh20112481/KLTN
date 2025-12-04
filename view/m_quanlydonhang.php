@@ -1,6 +1,15 @@
 <?php
-$maBuuCuc = $_SESSION['buu_cuc_info']['maBuuCuc'];
+// Kiểm tra quyền: Admin hay NVBC
+$isAdmin = isset($_SESSION['admin']) ? true : false;
+$maBuuCuc = 'all';
+
+if (!$isAdmin && isset($_SESSION['buu_cuc_info']) && isset($_SESSION['buu_cuc_info']['maBuuCuc'])) {
+    // NVBC chỉ xem đơn hàng của bưu cục mình
+    $maBuuCuc = $_SESSION['buu_cuc_info']['maBuuCuc'];
+}
+
 echo "<script> var maBuuCuc = " . json_encode($maBuuCuc) . ";</script>";
+echo "<script> var isAdmin = " . json_encode($isAdmin) . ";</script>";
 ?>
 
 <!DOCTYPE html>
@@ -33,6 +42,28 @@ echo "<script> var maBuuCuc = " . json_encode($maBuuCuc) . ";</script>";
 <div class="table-responsive">
     <br>
     <h2 id="h2-content" class="text-center">Quản Lý Đơn Hàng Bưu Cục</h2>
+
+    <!-- Dropdown bộ lọc bưu cục (chỉ cho Admin) -->
+    <?php if ($isAdmin): ?>
+    <div class="container-fluid mb-3">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <label for="selectBuuCucFilter" class="form-label fw-bold">
+                            <i class="fa-solid fa-building"></i> Lọc theo bưu cục:
+                        </label>
+                        <select class="form-select" id="selectBuuCucFilter">
+                            <option value="all">Tất cả bưu cục</option>
+                            <!-- Các option sẽ được thêm bằng JavaScript -->
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <div class="container-fluid">
         <div class="row d-flex mb-2">
             <div class="col-12 d-flex justify-content-end">
@@ -41,7 +72,7 @@ echo "<script> var maBuuCuc = " . json_encode($maBuuCuc) . ";</script>";
                     <span class="" id="p1-content">Tìm kiếm:</span>
                     <input type="text" class="form-control" id="search" placeholder="Nhập Mã Vận Đơn...">
                 </div>
-                
+
                 <!-- LỌC THEO NGÀY -->
                 <div class="d-flex mr-3">
                     <span class="mt-2" id="p1-content">Ngày:</span>

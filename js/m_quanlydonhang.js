@@ -58,29 +58,74 @@ function getBadge(trangThaiDonHang) {
     }
 }
 
-document.getElementById('select').addEventListener('change', function() {
-    var trangThai = this.value;
-    var ngayLapDon = document.getElementById('date').value;
-    var maVanDon = document.getElementById('search').value;
-    document.getElementById('displayDate').value = ngayLapDon; // Hiển thị giá trị ngày tháng
-    fetchData(trangThai, ngayLapDon, maVanDon);
-});
+// Load danh sách bưu cục (chỉ cho admin)
+function loadDanhSachBuuCuc() {
+    if (typeof isAdmin !== 'undefined' && isAdmin) {
+        fetch('http://localhost:8080/WEBSITE_EXHIBITION/API/API_getDanhSachBuuCuc.php')
+            .then(response => response.json())
+            .then(result => {
+                console.log('Dữ liệu bưu cục:', result);
+                if (result.success) {
+                    const selectElement = document.getElementById('selectBuuCucFilter');
+                    if (selectElement) {
+                        result.data.forEach(buuCuc => {
+                            const option = document.createElement('option');
+                            option.value = buuCuc.maBuuCuc;
+                            option.textContent = buuCuc.tenBuuCuc + ' - ' + buuCuc.diaChiBC;
+                            selectElement.appendChild(option);
+                        });
+                    }
+                } else {
+                    console.error('Lỗi:', result.message);
+                }
+            })
+            .catch(error => console.error('Lỗi khi load danh sách bưu cục:', error));
+    }
+}
 
-document.getElementById('date').addEventListener('change', function() {
-    var ngayLapDon = this.value;
-    document.getElementById('displayDate').value = ngayLapDon; // Hiển thị giá trị ngày tháng
-    var trangThai = document.getElementById('select').value;
-    var maVanDon = document.getElementById('search').value;
-    fetchData(trangThai, ngayLapDon, maVanDon);
-});
+// Khởi tạo event listeners và load dữ liệu khi DOM sẵn sàng
+document.addEventListener('DOMContentLoaded', function() {
+    // Event listeners cho các bộ lọc
+    document.getElementById('select').addEventListener('change', function() {
+        var trangThai = this.value;
+        var ngayLapDon = document.getElementById('date').value;
+        var maVanDon = document.getElementById('search').value;
+        document.getElementById('displayDate').value = ngayLapDon;
+        fetchData(trangThai, ngayLapDon, maVanDon);
+    });
 
-document.getElementById('search').addEventListener('input', function() {
-    var maVanDon = this.value;
-    fetchData(null, null, maVanDon);
-});
+    document.getElementById('date').addEventListener('change', function() {
+        var ngayLapDon = this.value;
+        document.getElementById('displayDate').value = ngayLapDon;
+        var trangThai = document.getElementById('select').value;
+        var maVanDon = document.getElementById('search').value;
+        fetchData(trangThai, ngayLapDon, maVanDon);
+    });
 
-// Load data with default state when page loads
-fetchData(null, null, null);
+    document.getElementById('search').addEventListener('input', function() {
+        var maVanDon = this.value;
+        fetchData(null, null, maVanDon);
+    });
+
+    // Event listener cho dropdown bưu cục (chỉ admin)
+    if (typeof isAdmin !== 'undefined' && isAdmin) {
+        const selectBuuCuc = document.getElementById('selectBuuCucFilter');
+        if (selectBuuCuc) {
+            selectBuuCuc.addEventListener('change', function() {
+                console.log('Chọn bưu cục:', this.value);
+                maBuuCuc = this.value;
+                var trangThai = document.getElementById('select').value;
+                var ngayLapDon = document.getElementById('date').value;
+                var maVanDon = document.getElementById('search').value;
+                fetchData(trangThai, ngayLapDon, maVanDon);
+            });
+        }
+    }
+
+    // Load danh sách bưu cục và dữ liệu ban đầu
+    loadDanhSachBuuCuc();
+    fetchData(null, null, null);
+});
 
 // Function to open print waybill page
 function printWaybill(id) {

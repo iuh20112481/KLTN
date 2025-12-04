@@ -4,26 +4,8 @@
             header("Location: dangNhapNhanSu.php");
             exit();
         }
-        $idUser = $_SESSION["nvbc"]['id_user'];
+        $idUser = $_SESSION["admin"]['id_user'];
         $nameUser = $_SESSION['name_user'];
-        $buuCucInfo = $_SESSION['buu_cuc_info'];
-        if(isset($buuCucInfo["Id_PhanLoaiNguoiDung"])) {
-            $_SESSION["nvbc"]["Id_PhanLoaiNguoiDung"] = $buuCucInfo["Id_PhanLoaiNguoiDung"];
-        }
-        include_once ("../control/cdonhang.php");
-        $p = new control_donhang();
-
-        if(isset($_GET['q']) && $_GET['q'] == 'chapnhan') {
-            $IdTaoDonHang = $_GET['id'];
-            $trangThaiDonHang = 'Đang chờ phân đơn';
-            $p->insertDonHang($_SESSION["nvbc"]["Id_PhanLoaiNguoiDung"], $IdTaoDonHang, $buuCucInfo['maBuuCuc'] , $trangThaiDonHang);
-        }
-        if(isset($_GET['q']) && $_GET['q'] == 'huy') {
-            $IdTaoDonHang = $_GET['id'];
-            $trangthaidonhuy='Hủy đơn';
-            $p->rejectDonHang($_SESSION["nvbc"]["Id_PhanLoaiNguoiDung"], $IdTaoDonHang , $buuCucInfo['maBuuCuc'], $trangthaidonhuy);
-        }
-      
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,7 +13,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Trang chủ</title>
+  <title>Trang Admin - HPship</title>
   <!-- Iconic Fonts -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="../css/all.min.css">
@@ -41,7 +23,7 @@
   <!-- jQuery UI -->
   <link href="../css/jquery-ui.min.css" rel="stylesheet">
   <!-- Page Specific CSS (Slick Slider.css) -->
-  
+
   <link href="../css/slick.css" rel="stylesheet">
   <link href="../css/style1.css?=v21" rel="stylesheet">
   <!-- Favicon -->
@@ -87,6 +69,16 @@
       .thongtin{
         font-family: 'Samsung One 400', sans-serif;
       }
+      .admin-badge {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        display: inline-block;
+        margin-left: 10px;
+      }
   </style>
 </head>
 
@@ -104,20 +96,23 @@
 
     <!-- Logo -->
     <div class="logo-sn ms-d-block-lg">
-        <a class="pl-0 ml-0 text-center" href="m_giaodiennguoidung.php">
+        <a class="pl-0 ml-0 text-center" href="admin_giaodiennguoidung.php">
             <img src="../img/logo.png" alt="logo" style="width: 80px; height: auto;">
         </a>
+        <div class="text-center mt-2">
+            <span class="admin-badge"><i class="fas fa-crown"></i> ADMIN</span>
+        </div>
     </div>
 
     <!-- Navigation -->
 <ul class="accordion ms-main-aside fs-14" id="side-nav-accordion">
-  
+
   <!---Quản lý Bưu cục -->
   <li class="menu-item">
-    <a href="#" class="has-chevron" data-toggle="collapse" data-target="#user" aria-expanded="false" aria-controls="user">
+    <a href="#" class="has-chevron" data-toggle="collapse" data-target="#buucuc" aria-expanded="false" aria-controls="buucuc">
       <span><i class="fa-solid fa-house"></i>Quản lý Bưu cục</span>
     </a>
-    <ul id="user" class="collapse" aria-labelledby="user" data-parent="#side-nav-accordion">
+    <ul id="buucuc" class="collapse" aria-labelledby="buucuc" data-parent="#side-nav-accordion">
       <li> <a href="?page=tkdt">Thống kê doanh thu</a> </li>
     </ul>
   </li>
@@ -125,24 +120,24 @@
 
   <!-- Quản lý nhân sự -->
   <li class="menu-item">
-    <a href="#" class="has-chevron" data-toggle="collapse" data-target="#muctieu" aria-expanded="false" aria-controls="muctieu">
+    <a href="#" class="has-chevron" data-toggle="collapse" data-target="#nhansu" aria-expanded="false" aria-controls="nhansu">
       <span><i class="fa-solid fa-users"></i>Quản lý nhân sự</span>
     </a>
-    <ul id="muctieu" class="collapse" aria-labelledby="muctieu" data-parent="#side-nav-accordion">
+    <ul id="nhansu" class="collapse" aria-labelledby="nhansu" data-parent="#side-nav-accordion">
+      <li> <a href="?page=qlnvbc">Nhân viên bưu cục</a> </li>
       <li> <a href="?page=adsnvgh">Nhân viên giao hàng</a> </li>
-      <li> <a href="?page=addnvgh">Thêm nhân viên</a> </li>
       <li> <a href="?page=qlhoahong">Quản lý hoa hồng</a> </li>
     </ul>
   </li>
   <!-- /Quản lý nhân sự -->
 
-  <!-- Phân đơn -->
+  <!-- Phân quyền -->
   <li class="menu-item">
-    <a href="?page=vphanloaidonhang">
-      <span><i class="fa-regular fa-calendar-days"></i>Phân đơn</span>
+    <a href="?page=phanquyen">
+      <span><i class="fa-solid fa-user-shield"></i>Phân quyền</span>
     </a>
   </li>
-  <!-- /Phân đơn -->
+  <!-- /Phân quyền -->
 
   <!-- Quản lý đơn hàng -->
   <li class="menu-item">
@@ -152,13 +147,13 @@
   </li>
   <!-- /Quản lý đơn hàng -->
 
-  <!-- ✅ TẠOO ĐƠN HÀNG VÃNG LAI - THÊM VÀO MENU -->
+  <!-- Tạo đơn hàng vãng lai -->
   <li class="menu-item">
     <a href="?page=taoDonHangVangLai">
       <span><i class="fa-solid fa-plus-circle"></i>Tạo đơn hàng vãng lai</span>
     </a>
   </li>
-  <!-- /TẠOO ĐƠN HÀNG VÃNG LAI -->
+  <!-- /Tạo đơn hàng vãng lai -->
 
 </ul>
   </aside>
@@ -177,58 +172,29 @@
       </div>
 
       <ul class="ms-nav-list mb-0 text-white">
-          <?php 
-            echo "Tên bưu cục: <a class='thongtin'>" . $buuCucInfo['tenBuuCuc'] . "</a><br>"; 
-            echo "Mã bưu cục: <a class='thongtin'>" . $buuCucInfo['maBuuCuc'] . "</a><br>";
-            echo "Nhân viên: <a class='thongtin'> ".$nameUser." </a><br>";
-          ?>
+          <div style="display: flex; align-items: center;">
+            <i class="fas fa-crown" style="color: #ffd700; margin-right: 10px; font-size: 20px;"></i>
+            <div>
+              <strong style="font-size: 16px;">QUẢN TRỊ VIÊN</strong><br>
+              <span class="thongtin">Xin chào, <?php echo $nameUser; ?></span>
+            </div>
+          </div>
       </ul>
 
       <ul class="ms-nav-list ms-inline mb-0" id="ms-nav-options">
-        
+
         <!-- Thông báo -->
         <li class="ms-nav-item dropdown">
           <a href="#" class="text-disabled ms-has-notification" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa-regular fa-bell fa-beat"></i></a>
           <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationDropdown">
             <li class="dropdown-menu-header">
-              <h6 class="dropdown-header ms-inline m-0"><span class="text-disabled">THÔNG BÁO</span></h6><span class="badge badge-pill badge-info">4 New</span>
+              <h6 class="dropdown-header ms-inline m-0"><span class="text-disabled">THÔNG BÁO</span></h6>
             </li>
-            <!-- <li class="dropdown-divider"></li> -->
             <li class="ms-scrollable ms-dropdown-list">
-                <?php 
-                    if (date("H:i") == "21:00") {
-                        $ngay = date("d/m/Y");
-                        $gio = date("H:i:s");
-                        
-                        echo" <a class='media p-2' href='#'>";
-                        echo"<span>Đã đến thời gian đánh giá mỗi ngày</span>";
-                        echo"<p class='fs-10 my-1 text-disabled'><i class='material-icons'>access_time</i>$ngay/ $gio </p>";
-                        echo"</a>";
-                        // Các xử lý khác nếu cần
-                    }
-                ?>
               <a class="media p-2" href="#">
                 <div class="media-body">
-                  <span>Mục tiêu của bạn đã đến hạn rồi vào đánh giá ngay thôi nào !</span>
-                  <p class="fs-10 my-1 text-disabled"><i class="material-icons"></i> 30 seconds ago</p>
-                </div>
-              </a>
-              <a class="media p-2" href="#">
-                <div class="media-body">
-                  <span>Cảm xúc hôm nay của bạn thế nào?</span>
-                  <p class="fs-10 my-1 text-disabled"><i class="material-icons">access_time</i> 45 minutes ago</p>
-                </div>
-              </a>
-              <a class="media p-2" href="#">
-                <div class="media-body">
-                  <span>Nhìn lại một tháng vừa qua của bạn ?</span>
-                  <p class="fs-10 my-1 text-disabled"><i class="material-icons">access_time</i> 2 hours ago</p>
-                </div>
-              </a>
-              <a class="media p-2" href="#">
-                <div class="media-body">
-                  <span>Bạn có hoàn thành việc quan trọng của bạn chưa?</span>
-                  <p class="fs-10 my-1 text-disabled"><i class="material-icons">access_time</i> 1 day ago</p>
+                  <span>Chào mừng quản trị viên đến với HPship!</span>
+                  <p class="fs-10 my-1 text-disabled"><i class="material-icons">access_time</i> Vừa xong</p>
                 </div>
               </a>
             </li>
@@ -240,9 +206,10 @@
         <li class="ms-nav-item ms-nav-user dropdown">
           <a href="#" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="fa-regular fa-circle-user fa-2xl"></i> </a>
           <ul class="dropdown-menu dropdown-menu-right user-dropdown" aria-labelledby="userDropdown" style="border-radius:12px; box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.60);">
-            
+
             <li class="dropdown-menu-footer" style="min-width: 270px;">
             <p style="text-align:center;";>Xin chào <br> <u style=" font-weight:bold; text-decoration:none";><?php echo $_SESSION['name_user']; ?></u></p>
+            <p style="text-align:center; color: #667eea; font-weight: bold;">Quản trị viên</p>
             <hr>
               <a class="media fs-14 p-2" href="?page=adx" id="logout-link">
                   <span><i class="fas fa-sign-out-alt"></i>Đăng xuất</span>
@@ -250,7 +217,7 @@
             </li>
           </ul>
         </li>
-        
+
       </ul>
 
       <div class="ms-toggler ms-d-block-sm pr-0 ms-nav-toggler" data-toggle="slideDown" data-target="#ms-nav-options">
@@ -262,17 +229,17 @@
     </nav>
 
     <!-- Body Content Wrapper -->
-    
+
     <div class="ms-content-wrapper" style="padding:0;">
-      <?php 
+      <?php
         if (isset($_GET['page'])) {
           $page = $_GET['page'];
           switch ($page) {
-              case 'aDBO':
-                  include_once('view/vdieubieton.php');
-                  break;
               case 'vphanloaidonhang':
                   include_once("m_phanloaidonhang.php");
+                  break;
+              case 'qlnvbc':
+                  include_once("admin_quanlyNVBC.php");
                   break;
               case 'adsnvgh':
                   include_once("m_quanlyNVGH.php");
@@ -280,11 +247,11 @@
               case 'adx':
                   include_once("dangxuat.php");
                   break;
-              case 'addnvgh':
-                  include_once("m_themNVGH.php");
-                  break;
               case 'qlhoahong':
                   include_once("m_quanlyhoahong.php");
+                  break;
+              case 'phanquyen':
+                  echo '<div class="container mt-5"><h3><i class="fas fa-user-shield"></i> Phân quyền người dùng</h3><p class="text-muted">Chức năng đang được phát triển...</p></div>';
                   break;
               case 'tkdt':
                   include_once("m_thongkedoanhthu.php");
@@ -292,23 +259,113 @@
               case 'qldh':
                   include_once("m_quanlydonhang.php");
                   break;
-              case 'dangky_ho_khach':
-                  include_once("m_dangkyhokhach.php");
-                  break;
-              // ✅ TẠOO ĐƠN HÀNG VÃNG LAI
               case 'taoDonHangVangLai':
                   $_SESSION['staff_creating_order'] = true;
                   include_once("m_taoDonHangVangLai.php");
                   break;
-              // /TẠOO ĐƠN HÀNG VÃNG LAI
               default:
-                  // Mặc định, có thể hiển thị trang chủ hoặc thông báo lỗi
-                  include('m_nhandonhang.php');
-                  // echo 'Trang không tồn tại';
-                  
+                  // Dashboard mặc định
+                  echo '
+                  <div class="container-fluid mt-5 p-4">
+                      <div class="row">
+                          <div class="col-12">
+                              <h2><i class="fas fa-tachometer-alt"></i> Dashboard Quản trị viên</h2>
+                              <hr>
+                          </div>
+                      </div>
+                      <div class="row mt-4">
+                          <div class="col-md-4 mb-3">
+                              <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                  <div class="card-body">
+                                      <h5><i class="fas fa-users"></i> Quản lý Nhân sự</h5>
+                                      <p>Quản lý toàn bộ nhân viên bưu cục và giao hàng</p>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="col-md-4 mb-3">
+                              <div class="card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+                                  <div class="card-body">
+                                      <h5><i class="fas fa-user-shield"></i> Phân Quyền</h5>
+                                      <p>Thiết lập quyền truy cập cho người dùng</p>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="col-md-4 mb-3">
+                              <div class="card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">
+                                  <div class="card-body">
+                                      <h5><i class="fas fa-box"></i> Quản lý Đơn hàng</h5>
+                                      <p>Theo dõi và quản lý tất cả đơn hàng</p>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="row mt-4">
+                          <div class="col-12">
+                              <div class="alert alert-info">
+                                  <h5><i class="fas fa-info-circle"></i> Hướng dẫn sử dụng</h5>
+                                  <ul>
+                                      <li>Sử dụng menu bên trái để điều hướng giữa các chức năng</li>
+                                      <li>Quản lý nhân sự: Xem, thêm, sửa thông tin nhân viên</li>
+                                      <li>Phân quyền: Thiết lập quyền truy cập cho từng vai trò</li>
+                                      <li>Quản lý đơn hàng: Theo dõi trạng thái và xử lý đơn hàng</li>
+                                  </ul>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  ';
         }
         }else{
-          include('m_nhandonhang.php');
+          // Dashboard mặc định
+          echo '
+          <div class="container-fluid mt-5 p-4">
+              <div class="row">
+                  <div class="col-12">
+                      <h2><i class="fas fa-tachometer-alt"></i> Dashboard Quản trị viên</h2>
+                      <hr>
+                  </div>
+              </div>
+              <div class="row mt-4">
+                  <div class="col-md-4 mb-3">
+                      <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                          <div class="card-body">
+                              <h5><i class="fas fa-users"></i> Quản lý Nhân sự</h5>
+                              <p>Quản lý toàn bộ nhân viên bưu cục và giao hàng</p>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                      <div class="card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+                          <div class="card-body">
+                              <h5><i class="fas fa-user-shield"></i> Phân Quyền</h5>
+                              <p>Thiết lập quyền truy cập cho người dùng</p>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                      <div class="card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">
+                          <div class="card-body">
+                              <h5><i class="fas fa-box"></i> Quản lý Đơn hàng</h5>
+                              <p>Theo dõi và quản lý tất cả đơn hàng</p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="row mt-4">
+                  <div class="col-12">
+                      <div class="alert alert-info">
+                          <h5><i class="fas fa-info-circle"></i> Hướng dẫn sử dụng</h5>
+                          <ul>
+                              <li>Sử dụng menu bên trái để điều hướng giữa các chức năng</li>
+                              <li>Quản lý nhân sự: Xem, thêm, sửa thông tin nhân viên</li>
+                              <li>Phân quyền: Thiết lập quyền truy cập cho từng vai trò</li>
+                              <li>Quản lý đơn hàng: Theo dõi trạng thái và xử lý đơn hàng</li>
+                          </ul>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          ';
         }
       ?>
     </div>
@@ -350,23 +407,6 @@
     <script src="../js/perfect-scrollbar.js"> </script>
     <script src="../js/jquery-ui.min.js"> </script>
     <!-- Global Required Scripts End -->
-
-    <!-- Page Specific Scripts Start -->
-    <!-- <script src="../js/moment.js"> </script>
-    <script src="../js/jquery.webticker.min.js"> </script>
-    <script src="../js/Chart.bundle.min.js"> </script>
-    <script src="../js/Chart.Financial.js"> </script>
-    <script src="../js/table-line.js"> </script>
-    <script src="../js/index-chart.js"> </script> -->
-
-    <!-- <script src="../js/d3.v3.min.js"> </script>
-    <script src="../js/topojson.v1.min.js"> </script>
-    <script src="../js/datamaps.all.min.js"> </script>
-    <script src="../js/index-map.js"> </script>
-
-    <script src="../js/chart.js"></script> -->
-
-    <!-- Page Specific Scripts End -->
 
     <!-- Weedo core JavaScript -->
     <script src="../js/framework.js"></script>

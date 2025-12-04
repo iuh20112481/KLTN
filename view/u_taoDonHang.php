@@ -91,7 +91,10 @@ if (isset($_POST["btn_submit"])) {
     $chieucao = $_POST["chieucao"] ?? 0;
     $ghichu = $_POST["ghichu"] ?? '';
     $classification = $_POST["classification"] ?? '';
-    $phithuho = $_POST["total-cost-with-phithuho"] ?? 0;
+    // Đảm bảo phithuho luôn là số (0 nếu không có phí thu hộ)
+    $phithuho = isset($_POST["total-cost-with-phithuho"]) && $_POST["total-cost-with-phithuho"] !== ''
+        ? floatval($_POST["total-cost-with-phithuho"])
+        : 0;
     $giavanchuyen = $_POST["shipping_cost"] ?? 0;
     $giaohang = $_POST["shipping_method"] ?? null;
     
