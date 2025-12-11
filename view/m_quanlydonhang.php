@@ -90,6 +90,7 @@ echo "<script> var isAdmin = " . json_encode($isAdmin) . ";</script>";
                         <option value="Đang Giao">Đang Giao</option>
                         <option value="Đã hủy">Đã hủy</option>
                         <option value="Đang chờ phân đơn">Đang chờ phân đơn</option>
+                        <option value="Đã phân đơn">Đã phân đơn</option>
                     </select>
                 </div>
             </div>

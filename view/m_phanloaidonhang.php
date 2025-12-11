@@ -20,7 +20,7 @@
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['maNhanVien']) && is_array($_POST['maNhanVien'])) {
             $ngayPhanHangGiao = date('d-m-Y');
-            $trangThaiDonHangGiao = '';
+            $trangThaiDonHangGiao = 'Đã phân đơn';
             $updated = false;
 
             foreach ($_POST['maNhanVien'] as $idDonHang => $maNhanVien) {

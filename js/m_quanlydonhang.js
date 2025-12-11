@@ -53,8 +53,12 @@ function getBadge(trangThaiDonHang) {
             return "<span class='badge badge-fixed-width rounded-pill text-bg-primary'>Đang giao</span>";
         case 'Hoàn trả':
             return "<span class='badge badge-fixed-width rounded-pill text-bg-danger'>Hoàn trả</span>";
+        case 'Đã phân đơn':
+            return "<span class='badge badge-fixed-width rounded-pill text-bg-info'>Đã phân đơn</span>";
+        case 'Đang chờ phân đơn':
+            return "<span class='badge badge-fixed-width rounded-pill text-bg-warning'>Đang chờ phân đơn</span>";
         default:
-            return "<span class='badge badge-fixed-width rounded-pill text-bg-warning'>Chưa duyệt đơn</span>";
+            return "<span class='badge badge-fixed-width rounded-pill text-bg-secondary'>Chưa xác định</span>";
     }
 }
 

@@ -252,7 +252,7 @@ include_once "connect1.php";
             WHERE
                 donhang.maNhanVien = '$maNhanVien'
                 AND
-                    donhang.trangThaiDonHang IN ('', 'Đang giao');
+                    donhang.trangThaiDonHang IN ('', 'Đang giao', 'Đã phân đơn');
             "; 
                 $tbl = mysqli_query($conn, $query);
                 $p->close_kn($conn);
