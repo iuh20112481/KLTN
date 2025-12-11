@@ -182,5 +182,74 @@ class model_hoahong {
             return false;
         }
     }
+
+    // Lấy số đơn cần giao của bưu cục (theo maNhanVien hoặc maBuuCuc)
+    function getSoDonCanGiao($maNhanVien) {
+        $p = new connect_db();
+        $conn = $p->open_kn();
+
+        if ($conn) {
+            $query = "SELECT soDonCanGiao FROM buucuc WHERE maNhanVien = ? LIMIT 1";
+            $stmt = mysqli_prepare($conn, $query);
+            mysqli_stmt_bind_param($stmt, "s", $maNhanVien);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+            $soDonCanGiao = 100; // Giá trị mặc định
+
+            if ($row = mysqli_fetch_assoc($result)) {
+                $soDonCanGiao = (int)$row['soDonCanGiao'];
+            }
+
+            mysqli_stmt_close($stmt);
+            $p->close_kn($conn);
+            return $soDonCanGiao;
+        } else {
+            return 100; // Giá trị mặc định
+        }
+    }
+
+    // Lấy số đơn cần giao theo mã bưu cục
+    function getSoDonCanGiaoByBuuCuc($maBuuCuc) {
+        $p = new connect_db();
+        $conn = $p->open_kn();
+
+        if ($conn) {
+            $query = "SELECT soDonCanGiao FROM buucuc WHERE maBuuCuc = ? LIMIT 1";
+            $stmt = mysqli_prepare($conn, $query);
+            mysqli_stmt_bind_param($stmt, "s", $maBuuCuc);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+            $soDonCanGiao = 100; // Giá trị mặc định
+
+            if ($row = mysqli_fetch_assoc($result)) {
+                $soDonCanGiao = (int)$row['soDonCanGiao'];
+            }
+
+            mysqli_stmt_close($stmt);
+            $p->close_kn($conn);
+            return $soDonCanGiao;
+        } else {
+            return 100; // Giá trị mặc định
+        }
+    }
+
+    // Cập nhật số đơn cần giao cho toàn bộ nhân viên của bưu cục
+    function updateSoDonCanGiao($maBuuCuc, $soDonCanGiao) {
+        $p = new connect_db();
+        $conn = $p->open_kn();
+
+        if ($conn) {
+            // Cập nhật cho tất cả NVGH của bưu cục này
+            $query = "UPDATE buucuc SET soDonCanGiao = ? WHERE maBuuCuc = ?";
+            $stmt = mysqli_prepare($conn, $query);
+            mysqli_stmt_bind_param($stmt, "is", $soDonCanGiao, $maBuuCuc);
+            $result = mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+            $p->close_kn($conn);
+            return $result;
+        } else {
+            return false;
+        }
+    }
 }
 ?>

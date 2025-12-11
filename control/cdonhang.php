@@ -200,5 +200,4 @@ include_once ("../model/mdonhang.php");
     }
     
     
-?>  
-
+?> 

@@ -84,6 +84,20 @@ while ($row = mysqli_fetch_assoc($resultChiTiet)) {
 
 mysqli_stmt_close($stmtChiTiet);
 
+// Lấy số đơn cần giao từ bảng buucuc
+$querySoDonCanGiao = "SELECT soDonCanGiao FROM buucuc WHERE maNhanVien = ? LIMIT 1";
+$stmtSoDonCanGiao = mysqli_prepare($conn, $querySoDonCanGiao);
+mysqli_stmt_bind_param($stmtSoDonCanGiao, "s", $maNhanVien);
+mysqli_stmt_execute($stmtSoDonCanGiao);
+$resultSoDonCanGiao = mysqli_stmt_get_result($stmtSoDonCanGiao);
+$soDonCanGiao = 100; // Giá trị mặc định
+
+if ($rowSoDonCanGiao = mysqli_fetch_assoc($resultSoDonCanGiao)) {
+    $soDonCanGiao = (int)$rowSoDonCanGiao['soDonCanGiao'];
+}
+
+mysqli_stmt_close($stmtSoDonCanGiao);
+
 // Lấy thống kê theo tháng hiện tại
 $thangHienTai = date('m');
 $namHienTai = date('Y');
@@ -105,13 +119,15 @@ $resultThang = mysqli_stmt_get_result($stmtThang);
 
 $dataThang = array(
     'soDonThang' => 0,
-    'tongHoaHongThang' => 0
+    'tongHoaHongThang' => 0,
+    'donCanGiao' => $soDonCanGiao  // Lấy từ database
 );
 
 if ($rowThang = mysqli_fetch_assoc($resultThang)) {
     $dataThang = array(
         'soDonThang' => (int)$rowThang['soDonThang'],
-        'tongHoaHongThang' => (float)$rowThang['tongHoaHongThang']
+        'tongHoaHongThang' => (float)$rowThang['tongHoaHongThang'],
+        'donCanGiao' => $soDonCanGiao  // Lấy từ database
     );
 }
 

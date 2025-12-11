@@ -311,8 +311,47 @@ include_once "connect1.php";
                         $giaVanChuyen = (float)$rowInfo['giaVanChuyen'];
                         $tyLeHoaHong = (float)$rowInfo['tyLeHoaHong'];
 
-                        // Tính hoa hồng: Tiền hoa hồng = Doanh thu × (Tỷ lệ % / 100)
-                        $hoaHongShipper = $giaVanChuyen * ($tyLeHoaHong / 100);
+                        // Lấy số đơn cần giao từ bảng buucuc
+                        $querySoDonCanGiao = "SELECT soDonCanGiao FROM buucuc WHERE maNhanVien = ? LIMIT 1";
+                        $stmtSoDon = mysqli_prepare($conn, $querySoDonCanGiao);
+                        mysqli_stmt_bind_param($stmtSoDon, "s", $maNhanVien);
+                        mysqli_stmt_execute($stmtSoDon);
+                        $resultSoDon = mysqli_stmt_get_result($stmtSoDon);
+                        $rowSoDon = mysqli_fetch_assoc($resultSoDon);
+                        $soDonCanGiao = isset($rowSoDon['soDonCanGiao']) ? (int)$rowSoDon['soDonCanGiao'] : 100;
+                        mysqli_stmt_close($stmtSoDon);
+
+                        // Đếm số đơn đã giao trong tháng hiện tại (không bao gồm đơn này)
+                        $thangHienTai = date('m');
+                        $namHienTai = date('Y');
+                        $queryCountDon = "SELECT COUNT(*) as soDonDaGiao
+                                         FROM donhang
+                                         WHERE maNhanVien = ?
+                                         AND trangThaiDonHang = 'Đã giao'
+                                         AND MONTH(STR_TO_DATE(ngayHTGiaoHang, '%d-%m-%Y')) = ?
+                                         AND YEAR(STR_TO_DATE(ngayHTGiaoHang, '%d-%m-%Y')) = ?
+                                         AND Id_DonHang != ?";
+
+                        $stmtCount = mysqli_prepare($conn, $queryCountDon);
+                        mysqli_stmt_bind_param($stmtCount, "siii", $maNhanVien, $thangHienTai, $namHienTai, $idDonHang);
+                        mysqli_stmt_execute($stmtCount);
+                        $resultCount = mysqli_stmt_get_result($stmtCount);
+                        $rowCount = mysqli_fetch_assoc($resultCount);
+                        $soDonDaGiao = (int)$rowCount['soDonDaGiao'];
+                        mysqli_stmt_close($stmtCount);
+
+                        // Logic tính hoa hồng mới:
+                        // - Nếu chưa đủ số đơn cần giao: hoa hồng = 0%
+                        // - Nếu >= số đơn cần giao: chỉ tính hoa hồng cho các đơn sau ngưỡng
+                        if ($soDonDaGiao < $soDonCanGiao) {
+                            // Chưa đủ số đơn cần giao, không tính hoa hồng
+                            $hoaHongShipper = 0;
+                            $tyLeHoaHongApDung = 0;
+                        } else {
+                            // Đã đủ số đơn cần giao, đơn này được tính hoa hồng
+                            $hoaHongShipper = $giaVanChuyen * ($tyLeHoaHong / 100);
+                            $tyLeHoaHongApDung = $tyLeHoaHong;
+                        }
 
                         // Update với hoa hồng và lưu snapshot tỷ lệ
                         $query = "UPDATE donhang
@@ -327,7 +366,7 @@ include_once "connect1.php";
                         mysqli_stmt_bind_param($stmt, "ssddis",
                             $trangThaiDonHang,
                             $ngayHTGiaoHang,
-                            $tyLeHoaHong,
+                            $tyLeHoaHongApDung,
                             $hoaHongShipper,
                             $idDonHang,
                             $maNhanVien

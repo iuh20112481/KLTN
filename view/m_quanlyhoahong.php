@@ -15,6 +15,9 @@ $controller = new control_hoahong();
 
 // Lấy danh sách shipper của bưu cục
 $shipperList = $controller->getAllShipperByBuuCuc($maBuuCuc);
+
+// Lấy số đơn cần giao hiện tại của bưu cục
+$soDonCanGiaoHienTai = $controller->getSoDonCanGiaoByBuuCuc($maBuuCuc);
 ?>
 <style>
     .container-main {
@@ -119,6 +122,28 @@ $shipperList = $controller->getAllShipperByBuuCuc($maBuuCuc);
                 Hoa hồng sẽ được tính tự động khi shipper cập nhật trạng thái đơn hàng "Đã giao".
                 <br><strong>Công thức:</strong> Tiền hoa hồng = Giá trị đơn hàng × Tỷ lệ %
                 <br><strong>Ví dụ:</strong> Đơn hàng 100,000 VNĐ × 10% = Shipper nhận 10,000 VNĐ
+                <br><strong>Điều kiện:</strong> Shipper phải giao đủ số đơn cần giao mỗi tháng thì các đơn sau mới được tính hoa hồng.
+            </div>
+
+            <!-- Cài đặt số đơn cần giao cho toàn bộ bưu cục -->
+            <div class="alert alert-warning">
+                <h5><i class="fas fa-cog"></i> Cài đặt số đơn cần giao cho toàn bộ bưu cục</h5>
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <label for="soDonCanGiaoInput" class="form-label">
+                            <strong>Số đơn cần giao tối thiểu mỗi tháng:</strong>
+                            <small class="text-muted">(Áp dụng cho tất cả shipper của bưu cục <?php echo $maBuuCuc; ?>)</small>
+                        </label>
+                        <input type="number" class="form-control" id="soDonCanGiaoInput"
+                               value="<?php echo $soDonCanGiaoHienTai; ?>"
+                               min="1" max="1000" step="1" style="width: 200px;">
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-update" id="btnUpdateSoDonCanGiao" data-mabuucuc="<?php echo $maBuuCuc; ?>">
+                            <i class="fas fa-save"></i> Cập nhật số đơn cần giao
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div class="table-responsive">
@@ -178,6 +203,38 @@ $shipperList = $controller->getAllShipperByBuuCuc($maBuuCuc);
             }
 
             jQuery(document).ready(function($) {
+                // Xử lý cập nhật số đơn cần giao
+                $('#btnUpdateSoDonCanGiao').click(function() {
+                    var maBuuCuc = $(this).data('mabuucuc');
+                    var soDonCanGiao = $('#soDonCanGiaoInput').val();
+
+                    if (soDonCanGiao === '' || soDonCanGiao < 1) {
+                        showAlert('Vui lòng nhập số đơn cần giao lớn hơn 0', 'warning');
+                        return;
+                    }
+
+                    $.ajax({
+                        url: '../control/choahong.php',
+                        method: 'POST',
+                        data: {
+                            action: 'updateSoDonCanGiao',
+                            maBuuCuc: maBuuCuc,
+                            soDonCanGiao: soDonCanGiao
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                showAlert('Cập nhật số đơn cần giao thành công! Áp dụng cho tất cả shipper của bưu cục.', 'success');
+                            } else {
+                                showAlert('Lỗi: ' + response.message, 'danger');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            showAlert('Có lỗi xảy ra khi kết nối server: ' + error, 'danger');
+                        }
+                    });
+                });
+
                 // Xử lý cập nhật hoa hồng
                 $('.btn-update-hoahong').click(function() {
                     var maNhanVien = $(this).data('manv');

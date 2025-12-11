@@ -184,7 +184,7 @@ if (!isset($maNhanVien) || empty($maNhanVien)) {
                         <div class="icon-box">
                             <i class="fas fa-calendar-alt"></i>
                         </div>
-                        <div class="stats-number" id="donThangNay">0</div>
+                        <div class="stats-number" id="donThangNay">0/100</div>
                         <div class="stats-label">Đơn tháng này</div>
                     </div>
                 </div>
@@ -206,6 +206,7 @@ if (!isset($maNhanVien) || empty($maNhanVien)) {
                         <i class="fas fa-info-circle"></i>
                         <strong>Công thức:</strong> Tiền hoa hồng = Giá trị đơn hàng × Tỷ lệ %
                         <br><small><em>Lưu ý: Chỉ các đơn giao từ ngày hôm nay trở đi mới được tính hoa hồng.</em></small>
+                        <br><small><strong>Điều kiện:</strong> Phải giao hơn 100 đơn/tháng thì các đơn sau đơn thứ 100 mới được tính hoa hồng. Nếu giao chưa đủ 100 đơn thì hoa hồng tính là 0%.</small>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -385,9 +386,20 @@ if (!isset($maNhanVien) || empty($maNhanVien)) {
                         // Cập nhật thống kê tổng quan
                         $('#tongDonDaGiao').text(response.tongQuat.soDonDaGiao);
                         $('#tongHoaHong').text(formatMoney(response.tongQuat.tongHoaHong) + ' đ');
-                        $('#donThangNay').text(response.thangNay.soDonThang);
+                        // Hiển thị "đơn đã giao/đơn cần giao"
+                        $('#donThangNay').text(response.thangNay.soDonThang + '/' + response.thangNay.donCanGiao);
                         $('#hoaHongThangNay').text(formatMoney(response.thangNay.tongHoaHongThang) + ' đ');
-                        $('#giaHoaHong').text(response.tongQuat.tyLeHoaHongHienTai + '%');
+
+                        // Hiển thị tỷ lệ hoa hồng động: 0% nếu chưa đủ đơn, x% nếu đủ đơn
+                        var soDonThang = response.thangNay.soDonThang;
+                        var donCanGiao = response.thangNay.donCanGiao;
+                        var tyLeHoaHong = response.tongQuat.tyLeHoaHongHienTai;
+
+                        if (soDonThang < donCanGiao) {
+                            $('#giaHoaHong').text('0%');
+                        } else {
+                            $('#giaHoaHong').text(tyLeHoaHong + '%');
+                        }
 
                         // Lưu dữ liệu gốc và hiển thị
                         allOrders = response.chiTietDonHang;
