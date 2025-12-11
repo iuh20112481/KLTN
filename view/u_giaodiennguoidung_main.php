@@ -106,6 +106,36 @@ echo "<script> var Id_TaiKhoan = " . json_encode($Id_TaiKhoan) . ";</script>";
     </div>
     <div class="pt-3">
     <h3 class="container text-center" id="h2-content">DANH SÁCH ĐƠN HÀNG</h3>
+
+        <!-- BỘ LỌC ĐƠN HÀNG -->
+        <div class="mb-3">
+            <form class="container" id="filterForm" style="background: gainsboro; padding: 20px; border-radius: 10px;">
+                <div class="row">
+                    <div class="col-md-5">
+                        <label for="filterMaVanDon" id="p1-content">Mã Vận Đơn:</label>
+                        <input class="form-control" type="text" id="filterMaVanDon" name="filterMaVanDon" placeholder="Nhập mã vận đơn">
+                    </div>
+                    <div class="col-md-5">
+                        <label for="filterTrangThai" id="p1-content">Trạng Thái Đơn Hàng:</label>
+                        <select id="filterTrangThai" name="filterTrangThai" class="form-select">
+                            <option value="">Tất cả</option>
+                            <option value="NULL">Chưa duyệt đơn</option>
+                            <option value="Đã phân đơn">Đã phân đơn</option>
+                            <option value="Đang chờ phân đơn">Đang chờ phân đơn</option>
+                            <option value="Đang giao">Đang giao hàng</option>
+                            <option value="Đã giao">Đã giao</option>
+                            <option value="Đã hủy">Đã hủy</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="button" onclick="filterOrders()" class="btn btn-success w-100">
+                            <span id="p1-content">LỌC</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         <!-- DANH SÁCH ĐƠN HÀNG -->
         <div class="row">
             <table class="table table-hover">
@@ -172,9 +202,45 @@ echo "<script> var Id_TaiKhoan = " . json_encode($Id_TaiKhoan) . ";</script>";
                         }
                         ?>
             </table>
-        </div>    
+        </div>
     </div>
 
+<script>
+        function filterOrders() {
+            var maVanDon = document.getElementById('filterMaVanDon').value.toLowerCase();
+            var trangThai = document.getElementById('filterTrangThai').value;
+            var table = document.querySelector('.table-hover tbody');
+            var rows = table.getElementsByTagName('tr');
+
+            for (var i = 0; i < rows.length; i++) {
+                var row = rows[i];
+                var maVanDonCell = row.cells[2].textContent.toLowerCase(); // Cột Mã vận đơn
+                var trangThaiCell = row.cells[7].textContent; // Cột Trạng thái
+
+                var showRow = true;
+
+                // Lọc theo mã vận đơn
+                if (maVanDon && !maVanDonCell.includes(maVanDon)) {
+                    showRow = false;
+                }
+
+                // Lọc theo trạng thái
+                if (trangThai) {
+                    if (trangThai === 'NULL') {
+                        if (!trangThaiCell.includes('Chưa duyệt đơn')) {
+                            showRow = false;
+                        }
+                    } else {
+                        if (!trangThaiCell.includes(trangThai)) {
+                            showRow = false;
+                        }
+                    }
+                }
+
+                row.style.display = showRow ? '' : 'none';
+            }
+        }
+</script>
 <script>
         function getDoanhThuFromAPI(Id_TaiKhoan) {
             fetch('http://localhost:8080/WEBSITE_EXHIBITION/API/API_xemDoanhThuCaNhan.php?Id_TaiKhoan=' + Id_TaiKhoan)

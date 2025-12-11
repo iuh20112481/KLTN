@@ -172,9 +172,6 @@
                                     <a id="p1-content" class="nav-link active" aria-current="page" href="?page=aDBO">Tạo đơn hàng</a>
                                 </div>
                                 <div class="nav-item" id="div">
-                                    <a id="p1-content" class="nav-link active" aria-current="page" href="?page=aqldh">Quản lý đơn hàng</a>
-                                </div>
-                                <div class="nav-item" id="div">
                                     <a id="p1-content" class="nav-link active" aria-current="page" href="?page=aPR">Quản lý tài khoản</a>
                                 </div>
                                 <div class="nav-item" id="div">
@@ -182,12 +179,6 @@
                                 </div>
                                 <div class="nav-item" id="div">
                                     <a id="p1-content" class="nav-link active" aria-current="page" href="?page=qldht">Nhận đơn hoàn trả</a>
-                                </div>
-                                <div class="nav-item" id="div">
-                                    <a id="p1-content" class="nav-link active" aria-current="page" href="#">Báo cáo tài chính</a>
-                                </div>
-                                <div class="nav-item" id="div">
-                                    <a id="p1-content" class="nav-link active" aria-current="page" href="#">Quản lý cửa hàng</a>
                                 </div>
                                 <div class="nav-item" id="div">
                                     <a  class="nav-link active" id="logout-link" href="#">Đăng xuất</a>

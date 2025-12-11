@@ -89,10 +89,10 @@ $Id_TaiKhoan = $_SESSION['nguoidung']['id_user'];
                         <label for="trangThaiDonHang" id="p1-content">Trạng Thái Đơn Hàng:</label>
                         <select id="trangThaiDonHang" name="trangThaiDonHang" class="form-select-lg">
                             <option value="">Tất cả</option>
-                            <option value="Chờ xác nhận">Chưa duyệt đơn</option>
-                            <option value="Chờ xác nhận">Đã phân đơn</option>            
-                            <option value="Đã xác nhận">Đã duyệt đơn</option>
-                            <option value="Đang giao hàng">Đang giao hàng</option>
+                            <option value="NULL">Chưa duyệt đơn</option>
+                            <option value="Đã phân đơn">Đã phân đơn</option>
+                            <option value="Đang chờ phân đơn">Đã duyệt đơn</option>
+                            <option value="Đang giao">Đang giao hàng</option>
                             <option value="Đã giao">Đã giao</option>
                             <option value="Đã hủy">Đã hủy</option>
                         </select>

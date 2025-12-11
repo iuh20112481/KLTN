@@ -51,9 +51,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         }
 
         if (!empty($trangThaiDonHang)) {
-            $sql .= " AND dh.trangThaiDonHang = ?";
-            $params[0] .= 's';
-            $params[] = $trangThaiDonHang;
+            if ($trangThaiDonHang === 'NULL') {
+                $sql .= " AND dh.trangThaiDonHang IS NULL";
+            } else {
+                $sql .= " AND dh.trangThaiDonHang = ?";
+                $params[0] .= 's';
+                $params[] = $trangThaiDonHang;
+            }
         }
 
         // Call the xemDHforCaNhan method
