@@ -214,7 +214,8 @@
                     <div class="mb-3">
                         <label for="phone">Số điện thoại</label>
                         <input type="tel" placeholder="Số điện thoại" name="phone" id="phone" class="form-control"
-                            required>
+                            pattern="[0-9]{10,11}" title="Số điện thoại phải có 10-11 chữ số" required>
+                        <small class="text-danger" id="phone-error" style="display:none;">Số điện thoại phải có 10-11 chữ số</small>
                     </div>
                 </div>
 
@@ -222,19 +223,22 @@
                     <div class="mb-3">
                         <label for="psw">Mật khẩu</label>
                         <input type="password" placeholder="Mật khẩu" name="psw" id="psw" class="form-control"
-                            required>
+                            minlength="6" title="Mật khẩu phải có ít nhất 6 ký tự" required>
+                        <small class="text-muted">Mật khẩu phải có ít nhất 6 ký tự</small>
                     </div>
 
                     <div class="mb-3">
                         <label for="psw-repeat">Nhập lại mật khẩu</label>
                         <input type="password" placeholder="Nhập lại mật khẩu" name="psw-repeat" id="psw-repeat"
                             class="form-control" required>
+                        <small class="text-danger" id="psw-error" style="display:none;">Mật khẩu không khớp</small>
                     </div>
 
                     <div class="mb-3">
                         <label for="email">Email</label>
-                        <input type="text" placeholder="Nhập email" name="email" id="mail" class="form-control"
-                            required>
+                        <input type="email" placeholder="Nhập email" name="email" id="mail" class="form-control"
+                            title="Vui lòng nhập email hợp lệ" required>
+                        <small class="text-danger" id="email-error" style="display:none;">Email không hợp lệ</small>
                     </div>
 
                     <div class="mb-3">
@@ -276,6 +280,96 @@
     </div>
 
 
+
+    <!-- SCRIPT VALIDATION -->
+    <script>
+        // Validation cho form đăng ký
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+            const password = document.getElementById('psw');
+            const passwordRepeat = document.getElementById('psw-repeat');
+            const pswError = document.getElementById('psw-error');
+            const phone = document.getElementById('phone');
+            const phoneError = document.getElementById('phone-error');
+            const email = document.getElementById('mail');
+            const emailError = document.getElementById('email-error');
+
+            // Validation khi submit form
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+
+                // Kiểm tra dropdown Mục đích sử dụng
+                const mucdichsudung = document.getElementById('option-uses');
+                if (mucdichsudung.value === 'chon') {
+                    alert('Vui lòng chọn mục đích sử dụng');
+                    mucdichsudung.focus();
+                    e.preventDefault();
+                    return false;
+                }
+
+                // Kiểm tra dropdown Quy mô vận chuyển
+                const quymovanchuyen = document.getElementById('option-quymo');
+                if (quymovanchuyen.value === 'chon') {
+                    alert('Vui lòng chọn quy mô vận chuyển');
+                    quymovanchuyen.focus();
+                    e.preventDefault();
+                    return false;
+                }
+
+                // Kiểm tra dropdown Ngành hàng
+                const nganhhang = document.getElementById('option-nganhhang');
+                if (nganhhang.value === 'chon') {
+                    alert('Vui lòng chọn ngành hàng');
+                    nganhhang.focus();
+                    e.preventDefault();
+                    return false;
+                }
+
+                // Kiểm tra số điện thoại
+                const phonePattern = /^[0-9]{10,11}$/;
+                if (!phonePattern.test(phone.value)) {
+                    phoneError.style.display = 'block';
+                    phone.focus();
+                    isValid = false;
+                } else {
+                    phoneError.style.display = 'none';
+                }
+
+                // Kiểm tra mật khẩu khớp nhau
+                if (password.value !== passwordRepeat.value) {
+                    pswError.style.display = 'block';
+                    passwordRepeat.focus();
+                    isValid = false;
+                } else {
+                    pswError.style.display = 'none';
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // Kiểm tra mật khẩu khớp nhau khi nhập
+            passwordRepeat.addEventListener('input', function() {
+                if (password.value !== passwordRepeat.value) {
+                    pswError.style.display = 'block';
+                } else {
+                    pswError.style.display = 'none';
+                }
+            });
+
+            // Kiểm tra số điện thoại khi nhập
+            phone.addEventListener('input', function() {
+                const phonePattern = /^[0-9]{10,11}$/;
+                if (!phonePattern.test(phone.value) && phone.value !== '') {
+                    phoneError.style.display = 'block';
+                } else {
+                    phoneError.style.display = 'none';
+                }
+            });
+        });
+    </script>
 
     <!-- SCRIPT CHO MỦI TÊN  -->
     <script>
