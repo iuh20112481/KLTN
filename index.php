@@ -1,10 +1,14 @@
+<?php
+// Include config file để lấy BASE_URL
+require_once('config.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang chủ </title>
-    <link rel="icon" href="img/logo.png" type="image/x-icon" sizes="16x16" type="image/png">
+    <link rel="icon" href="<?php echo IMG_PATH; ?>logo.png" type="image/x-icon" sizes="16x16" type="image/png">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -163,18 +167,18 @@
         <div class="container-fluid">
 
           <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-            <a href="index.php" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
-              <img src="img/logo.png" alt="logo" style="max-width: 75px;">
+            <a href="<?php echo BASE_URL; ?>" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+              <img src="<?php echo IMG_PATH; ?>logo.png" alt="logo" style="max-width: 75px;">
 
             </a>
             <ul class="nav col-lg-auto mx-auto justify-content-center mb-md-0">
-              <li><a href="?page=aDBO" class="nav-link nav-link-black link-hover">TRANG CHỦ</a></li>
+              <li><a href="<?php echo BASE_URL; ?>?page=aDBO" class="nav-link nav-link-black link-hover">TRANG CHỦ</a></li>
 
-              <li><a href="?page=atkbc" class="nav-link nav-link-black link-hover">TÌM KIẾM BƯU CỤC</a></li>
+              <li><a href="<?php echo BASE_URL; ?>?page=atkbc" class="nav-link nav-link-black link-hover">TÌM KIẾM BƯU CỤC</a></li>
 
-              <li><a href="./view/u_baogia.php" class="nav-link nav-link-black link-hover" target="_blank">BÁO GIÁ</a></li>
+              <li><a href="<?php echo VIEW_PATH; ?>u_baogia.php" class="nav-link nav-link-black link-hover" target="_blank">BÁO GIÁ</a></li>
 
-              <li><a href="?page=atcg" class="nav-link nav-link-black link-hover">TRA CỨU GIÁ</a></li>
+              <li><a href="<?php echo BASE_URL; ?>?page=atcg" class="nav-link nav-link-black link-hover">TRA CỨU GIÁ</a></li>
 
               <li><a href="#" class="nav-link nav-link-black link-hover">LIÊN HỆ</a></li>
             </ul>
@@ -186,14 +190,14 @@
 
             <div class="dropdown text-end">
               <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="img/avatar1.png" alt="mdo" width="32" height="32" class="rounded-circle">
+                <img src="<?php echo IMG_PATH; ?>avatar1.png" alt="mdo" width="32" height="32" class="rounded-circle">
               </a>
               <ul class="dropdown-menu text-small">
                 <li><a class="dropdown-item" href="#" target="_blank">Tài khoản</a></li>
-                <li><a class="dropdown-item" href="view/dangnhap.php" target="_blank">Đăng nhập</a></li>
-                <li><a class="dropdown-item" href="view/dangky.php" target="_blank">Đăng ký</a></li>
+                <li><a class="dropdown-item" href="<?php echo VIEW_PATH; ?>dangNhap.php" target="_blank">Đăng nhập</a></li>
+                <li><a class="dropdown-item" href="<?php echo VIEW_PATH; ?>dangKy.php" target="_blank">Đăng ký</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="view/dangxuat.php">Đăng xuất</a></li>
+                <li><a class="dropdown-item" href="<?php echo VIEW_PATH; ?>dangxuat.php">Đăng xuất</a></li>
               </ul>
             </div>
           </div>
@@ -259,7 +263,7 @@
                   $('#result').show();
 
                   var expression = new RegExp(searchField, 'i');
-                  $.getJSON('./API/connectAPI.php', { maVanDon: searchField }, function (data) {
+                  $.getJSON('<?php echo API_BASE_URL; ?>connectAPI.php', { maVanDon: searchField }, function (data) {
                       $.each(data, function (key, value) {
                           if (value.maVanDon.search(expression) !== -1 || value.tenDonHang.search(expression) !== -1) {
                               $('#result').append('<li class="list-group-item text-center" data-mavandon="' + value.maVanDon + '">' + value.maVanDon + '</li>');
@@ -275,7 +279,7 @@
       // Lắng nghe sự kiện click và chuyển hướng dựa trên maVanDon
       $('#result').on('click', 'li', function () {
           var maVanDon = $(this).data('mavandon'); // Trích xuất maVanDon từ thuộc tính data
-          window.location.href = 'chi_tiet_don_hang.php?maVanDon=' + maVanDon; // Chuyển hướng đến trang chi tiết đơn hàng
+          window.location.href = '<?php echo BASE_URL; ?>chi_tiet_don_hang.php?maVanDon=' + maVanDon; // Chuyển hướng đến trang chi tiết đơn hàng
       });
   });
 </script>

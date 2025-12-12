@@ -3,7 +3,9 @@
     "allow": [
       "Bash(mysql:*)",
       "Bash(curl:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(git log:*)",
+      "Bash(ls \"c:\\wamp64\\www\\WEBSITE_EXHIBITION\\view\"\" | grep -i \"dang \")"
     ],
     "deny": [],
     "ask": []

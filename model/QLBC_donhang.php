@@ -1,4 +1,6 @@
 <?php
+// Include helper function để tạo mã vận đơn
+include_once __DIR__ . "/m_mavandon_helper.php";
 
 class Database {
     private $servername = "localhost";
@@ -29,9 +31,12 @@ class controlxacnhan {
     public function addDonHang($Id_TaoDonHang, $Id_PhanLoaiNguoiDung, $tenBuuCuc) {
         $conn = $this->db->getConnection();
 
+        // Tạo mã vận đơn tự động (sử dụng helper function)
+        $maVanDon = generateMaVanDon($conn);
+
         $sql = "INSERT INTO donhang (Id_TaoDonHang, Id_PhanLoaiNguoiDung, maVanDon, tenBuuCuc) VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("iiss", $Id_TaoDonHang, $Id_PhanLoaiNguoiDung, $tenBuuCuc);
+        $stmt->bind_param("iiss", $Id_TaoDonHang, $Id_PhanLoaiNguoiDung, $maVanDon, $tenBuuCuc);
 
         if ($stmt->execute()) {
             return true;

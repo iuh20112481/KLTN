@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css?=b1">
+    <link rel="stylesheet" href="<?php echo defined('CSS_PATH') ? CSS_PATH : '../css/'; ?>style.css?=b1">
 </head>
 <body>
 <!-- footer.php -->
@@ -16,18 +16,18 @@
                 <h4 class="h4-footer">GIỚI THIỆU</h4>
                 <ul class="ul-footer">
                     <li><a href="#">Về chúng tôi</a></li>
-                    <li><a href="./view/u_dieukhoan.php">Điều khoản sử dụng</a></li>
-                    <li><a href="./view/u_quydinhkhieunai.php">Quy định vận chuyển</a></li>
-                    <li><a href="./view/u_tiemkiembuucuc.php">Bưu cục</a></li>
+                    <li><a href="<?php echo defined('VIEW_PATH') ? VIEW_PATH : './view/'; ?>u_dieukhoan.php">Điều khoản sử dụng</a></li>
+                    <li><a href="<?php echo defined('VIEW_PATH') ? VIEW_PATH : './view/'; ?>u_quydinhkhieunai.php">Quy định vận chuyển</a></li>
+                    <li><a href="<?php echo defined('VIEW_PATH') ? VIEW_PATH : './view/'; ?>u_tiemkiembuucuc.php">Bưu cục</a></li>
                 </ul>
             </div>
             <div class="col-md-3">
                 <h4 class="h4-footer">HỖ TRỢ</h4>
                 <ul class="ul-footer">
                     <li><a href="#">Hướng dẫn đặt hàng</a></li>
-                    <li><a href="./view/u_tracuugia.php">Tra cứu đơn hàng</a></li>
-                    <li><a href="./view/u_chinhsachbaomat.php">Chính sách bảo mật</a></li>
-                    <li><a href="./viewchinhsachboithuong.php">Chính sách bồi thường</a></li>
+                    <li><a href="<?php echo defined('VIEW_PATH') ? VIEW_PATH : './view/'; ?>u_tracuugia.php">Tra cứu đơn hàng</a></li>
+                    <li><a href="<?php echo defined('VIEW_PATH') ? VIEW_PATH : './view/'; ?>u_chinhsachbaomat.php">Chính sách bảo mật</a></li>
+                    <li><a href="<?php echo defined('VIEW_PATH') ? VIEW_PATH : './view/'; ?>chinhsachboithuong.php">Chính sách bồi thường</a></li>
                 </ul>
             </div>
             <div class="col-md-3">
