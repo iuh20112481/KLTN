@@ -1,13 +1,18 @@
 <?php
+// Load config file
+if (!defined('DB_HOST')) {
+    require_once(dirname(__DIR__) . '/config.php');
+}
+
 class connect_db {
     function open_kn() {
-        $conn = mysqli_connect("localhost", "root", "", "HPship");
+        $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
         mysqli_set_charset($conn, "utf8");
-        
+
         if ($conn) {
             return $conn; // Trả về kết nối thay vì true
         } else {
-            die("Lỗi kết nối: " . mysqli_connect_error()); 
+            die("Lỗi kết nối: " . mysqli_connect_error());
         }
     }
 
@@ -16,9 +21,9 @@ class connect_db {
     }
 
     public static function open_kn1() {
-        $conn = mysqli_connect("localhost", "root", "", "HPship");
+        $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
         mysqli_set_charset($conn, "utf8");
-        
+
         if ($conn) {
             return $conn; // Trả về kết nối thay vì true
         } else {

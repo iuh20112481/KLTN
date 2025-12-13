@@ -5,7 +5,9 @@
       "Bash(curl:*)",
       "Bash(find:*)",
       "Bash(git log:*)",
-      "Bash(ls \"c:\\wamp64\\www\\WEBSITE_EXHIBITION\\view\"\" | grep -i \"dang \")"
+      "Bash(ls \"c:\\wamp64\\www\\WEBSITE_EXHIBITION\\view\"\" | grep -i \"dang \")",
+      "Bash(php:*)",
+      "Bash(dir \"c:\\wamp64\\www\\WEBSITE_EXHIBITION\\font\")"
     ],
     "deny": [],
     "ask": []

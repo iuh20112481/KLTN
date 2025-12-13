@@ -41,3 +41,37 @@ define('BASE_PATH', dirname(__FILE__) . '/');
 define('VIEW_DIR', BASE_PATH . 'view/');
 define('CONTROL_DIR', BASE_PATH . 'control/');
 define('MODEL_DIR', BASE_PATH . 'model/');
+
+// Database Configuration - Auto-detect environment
+if ($isLocalhost) {
+    // Localhost configuration
+    define('DB_HOST', 'localhost');
+    define('DB_USER', 'root');
+    define('DB_PASS', '');
+    define('DB_NAME', 'HPship');
+} else {
+    // InfinityFree hosting configuration
+    define('DB_HOST', 'sql209.infinityfree.com');
+    define('DB_USER', 'if0_40664313');
+    define('DB_PASS', '0903366032Aa');
+    define('DB_NAME', 'if0_40664313_hpship');
+}
+define('DB_PORT', '3306');
+
+/**
+ * Helper function to create PDO connection
+ * @return PDO
+ */
+function getPDOConnection() {
+    try {
+        $pdo = new PDO(
+            "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8",
+            DB_USER,
+            DB_PASS
+        );
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $pdo;
+    } catch (PDOException $e) {
+        die("Lỗi kết nối PDO: " . $e->getMessage());
+    }
+}

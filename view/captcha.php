@@ -15,7 +15,7 @@ imagefill($image, 0, 0, $bgColor);
 
 $textColor = imagecolorallocate($image, 0, 0, 0);
 
-imagettftext($image, 20, 0, 10, 30, $textColor, '../font/samsungOne-400.ttf', $randomString);
+imagettftext($image, 20, 0, 10, 30, $textColor, '../font/SamsungOne-400.ttf', $randomString);
 
 header('Content-Type: image/png');
 imagepng($image);

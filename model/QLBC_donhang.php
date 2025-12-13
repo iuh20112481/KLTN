@@ -1,15 +1,22 @@
 <?php
-// Include helper function để tạo mã vận đơn
-include_once __DIR__ . "/m_mavandon_helper.php";
+// Load config file
+if (!defined('DB_HOST')) {
+    require_once(dirname(__DIR__) . '/config.php');
+}
 
 class Database {
-    private $servername = "localhost";
-    private $username = "root";
-    private $password = "";
-    private $database = "HPship";
+    private $servername;
+    private $username;
+    private $password;
+    private $database;
     private $conn;
 
     public function __construct() {
+        $this->servername = DB_HOST;
+        $this->username = DB_USER;
+        $this->password = DB_PASS;
+        $this->database = DB_NAME;
+
         $this->conn = new mysqli($this->servername, $this->username, $this->password, $this->database);
         if ($this->conn->connect_error) {
             die("Kết nối đến cơ sở dữ liệu thất bại: " . $this->conn->connect_error);
@@ -31,12 +38,9 @@ class controlxacnhan {
     public function addDonHang($Id_TaoDonHang, $Id_PhanLoaiNguoiDung, $tenBuuCuc) {
         $conn = $this->db->getConnection();
 
-        // Tạo mã vận đơn tự động (sử dụng helper function)
-        $maVanDon = generateMaVanDon($conn);
-
         $sql = "INSERT INTO donhang (Id_TaoDonHang, Id_PhanLoaiNguoiDung, maVanDon, tenBuuCuc) VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("iiss", $Id_TaoDonHang, $Id_PhanLoaiNguoiDung, $maVanDon, $tenBuuCuc);
+        $stmt->bind_param("iiss", $Id_TaoDonHang, $Id_PhanLoaiNguoiDung, $tenBuuCuc);
 
         if ($stmt->execute()) {
             return true;

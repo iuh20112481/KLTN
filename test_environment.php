@@ -271,8 +271,8 @@ require_once('config.php');
                 'index.php',
                 'config.php',
                 '.htaccess',
-                'view/dangNhap.php',
-                'view/dangKy.php',
+                'view/dangnhap.php',
+                'view/dangky.php',
                 'model/connect1.php'
             ];
             foreach ($files as $file) {
@@ -298,24 +298,28 @@ require_once('config.php');
 
         <p>
             <a href="<?php echo BASE_URL; ?>" class="test-link" target="_blank">Trang chủ</a>
-            <a href="<?php echo VIEW_PATH; ?>dangNhap.php" class="test-link" target="_blank">Đăng nhập</a>
-            <a href="<?php echo VIEW_PATH; ?>dangKy.php" class="test-link" target="_blank">Đăng ký</a>
+            <a href="<?php echo VIEW_PATH; ?>dangnhap.php" class="test-link" target="_blank">Đăng nhập</a>
+            <a href="<?php echo VIEW_PATH; ?>dangky.php" class="test-link" target="_blank">Đăng ký</a>
             <a href="<?php echo BASE_URL; ?>?page=atkbc" class="test-link" target="_blank">Tìm kiếm bưu cục</a>
         </p>
 
         <h2>7. Kiểm tra kết nối Database</h2>
+        <div class="info-box">
+            <strong>Môi trường:</strong> <?php echo in_array($_SERVER['HTTP_HOST'], ['localhost', '127.0.0.1', 'localhost:8080']) ? 'Localhost (Development)' : 'Production Host (InfinityFree)'; ?>
+        </div>
         <?php
-        // Test database connection
-        $db_host = 'localhost';
-        $db_user = 'root';
-        $db_pass = '';
-        $db_name = 'HPship';
+        // Test database connection - SỬ DỤNG CONFIG.PHP
+        $db_host = defined('DB_HOST') ? DB_HOST : 'NOT_DEFINED';
+        $db_user = defined('DB_USER') ? DB_USER : 'NOT_DEFINED';
+        $db_pass = defined('DB_PASS') ? DB_PASS : 'NOT_DEFINED';
+        $db_name = defined('DB_NAME') ? DB_NAME : 'NOT_DEFINED';
 
         echo '<table>';
         echo '<tr><th>Thông số</th><th>Giá trị</th></tr>';
         echo '<tr><td>Host</td><td>' . $db_host . '</td></tr>';
         echo '<tr><td>Database</td><td>' . $db_name . '</td></tr>';
         echo '<tr><td>User</td><td>' . $db_user . '</td></tr>';
+        echo '<tr><td>Password</td><td>' . (empty($db_pass) ? '(empty)' : '************') . '</td></tr>';
         echo '</table>';
 
         try {
@@ -323,39 +327,13 @@ require_once('config.php');
             if ($conn->connect_error) {
                 echo '<div class="warning-box">';
                 echo '<strong>⚠️ Lỗi kết nối Database:</strong><br>';
-                echo 'Error Code: ' . $conn->connect_errno . '<br>';
                 echo 'Error: ' . $conn->connect_error;
                 echo '<br><br><strong>Giải pháp:</strong>';
                 echo '<ul>';
-
-                if ($conn->connect_errno == 2002) {
-                    echo '<li><strong>Lỗi "No such file or directory"</strong> - Đây là lỗi socket MySQL</li>';
-                    echo '<li>Trên host, cần kiểm tra với hosting provider về thông tin kết nối database</li>';
-                    echo '<li>Host có thể là: localhost, 127.0.0.1, hoặc IP cụ thể của database server</li>';
-                    echo '<li>Có thể cần thêm port: localhost:3306</li>';
-                } else if ($conn->connect_errno == 1045) {
-                    echo '<li><strong>Access denied</strong> - Sai username hoặc password</li>';
-                    echo '<li>Kiểm tra lại thông tin database từ hosting provider</li>';
-                } else if ($conn->connect_errno == 1049) {
-                    echo '<li><strong>Unknown database</strong> - Database chưa được tạo</li>';
-                    echo '<li>Tạo database "HPship" trong cPanel hoặc phpMyAdmin</li>';
-                    echo '<li>Import file SQL vào database</li>';
-                }
-
-                echo '<li>Cập nhật thông tin trong các file: model/connect1.php, model/connect2.php, model/connect3.php</li>';
-                echo '<li><strong>QUAN TRỌNG:</strong> Thông tin database trên host KHÁC với localhost!</li>';
+                echo '<li>Kiểm tra database đã được tạo chưa</li>';
+                echo '<li>Kiểm tra username/password database</li>';
+                echo '<li>Cập nhật thông tin trong file model/connect*.php</li>';
                 echo '</ul>';
-                echo '<div style="background: #fff; padding: 10px; border-left: 3px solid #dc3545; margin-top: 10px;">';
-                echo '<strong>Ví dụ cập nhật file connect*.php trên host:</strong><br>';
-                echo '<code style="display: block; background: #f4f4f4; padding: 10px; margin-top: 5px;">';
-                echo '// Thay đổi từ:<br>';
-                echo '$conn = new mysqli("localhost", "root", "", "HPship");<br><br>';
-                echo '// Thành (lấy thông tin từ hosting provider):<br>';
-                echo '$conn = new mysqli("localhost", "your_db_user", "your_db_pass", "your_db_name");<br>';
-                echo '// Hoặc có thể là:<br>';
-                echo '$conn = new mysqli("127.0.0.1", "your_db_user", "your_db_pass", "your_db_name");<br>';
-                echo '</code>';
-                echo '</div>';
                 echo '</div>';
             } else {
                 echo '<div class="info-box">';
@@ -368,7 +346,6 @@ require_once('config.php');
             echo '<div class="warning-box">';
             echo '<strong>⚠️ Không thể kết nối Database:</strong><br>';
             echo $e->getMessage();
-            echo '<br><br><strong>Giải pháp:</strong> Kiểm tra thông tin database từ hosting provider và cập nhật trong file model/connect*.php';
             echo '</div>';
         }
         ?>
